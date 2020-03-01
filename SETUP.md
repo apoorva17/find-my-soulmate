@@ -13,8 +13,7 @@ Setup Instructions
 	  host: "localhost",
 	  username: "root",
 	  password: "",
-	  database: "",
-	  access_token: ""
+	  database: ""
 	};`
 	Fill in the relevent sections in the config file.
 2. Run `npm install` to install node modules
