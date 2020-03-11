@@ -1,26 +1,46 @@
 
+// tools.js
+// ========
+
 const fs = require('fs');
 const MongoClient = require('mongodb').MongoClient;
 const mongourl = "mongodb://localhost:27017/";
 
-
-function insert(data) {		
-	MongoClient.connect(mongourl, function(err, db) {
+module.exports = {
+  insert: function (data) {
+  	MongoClient.connect(mongourl, function(err, db) {
 	  if (err) throw err;
-	  var dbo = db.db("testdb");
-  dbo.collection("customers").insertOne(data, function(err, res) {
+	  var dbo = db.db("FMSdb");
+	  dbo.collection("users").insertOne(data, function(err, res) {
 	    if (err) throw err;
 	    console.log("1 document inserted");
 	    db.close();
 	  });
 
 	});
-}
+    // whatever
+  }
+};
+
+
+function insert(data) {
+  	MongoClient.connect(mongourl, function(err, db) {
+	  if (err) throw err;
+	  var dbo = db.db("FMSdb");
+	  dbo.collection("users").insertOne(data, function(err, res) {
+	    if (err) throw err;
+	    console.log("1 document inserted");
+	    db.close();
+	  });
+
+	});
+    // whatever
+  }
 
 function insertsample(){
 	MongoClient.connect(mongourl, function(err, db) {
-		var dbo = db.db("testdb");
-		dbo.collection("customers").deleteMany({})
+		var dbo = db.db("FMSdb");
+		dbo.collection("users").deleteMany({})
 	});
 
 	let rawdata = fs.readFileSync('example_personality_outputs/oprah.json');
@@ -68,23 +88,24 @@ function insertsample(){
 
 }
 
-insertsample();
 
+//query examples
+// ==============================
+// insertsample();
 
-//query example
-//Select all where "needs challenge" perrcentile is > 0.5
-MongoClient.connect(mongourl, function(err, db) {
-  if (err) throw err;
-  var dbo = db.db("testdb");
-  var query = { "needs": { $elemMatch: { trait_id: "need_challenge", percentile: {$gt: 0.5}} } }
+// //Select all where "needs challenge" perrcentile is > 0.5
+// MongoClient.connect(mongourl, function(err, db) {
+//   if (err) throw err;
+//   var dbo = db.db("FMSdb");
+//   var query = { "needs": { $elemMatch: { trait_id: "need_challenge", percentile: {$gt: 0.5}} } }
 
-  dbo.collection("customers").find(query).toArray(function(err, results) {
-    if (err) throw err;
+//   dbo.collection("users").find(query).toArray(function(err, results) {
+//     if (err) throw err;
 
-    for (var result of results) {
-    	console.log(result.name)
-    	console.log(result.needs[0].percentile)
-    }
-    db.close();
-  });
-}); 
+//     for (var result of results) {
+//     	console.log(result.name)
+//     	console.log(result.needs[0].percentile)
+//     }
+//     db.close();
+//   });
+// }); 
