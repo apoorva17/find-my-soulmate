@@ -7,6 +7,7 @@ const MongoClient = require('mongodb').MongoClient;
 const mongourl = "mongodb://localhost:27017/";
 
 module.exports = {
+  //insert json data into db
   insert: function (data) {
   	MongoClient.connect(mongourl, function(err, db) {
 	  if (err) throw err;
@@ -18,7 +19,62 @@ module.exports = {
 	  });
 
 	});
-    // whatever
+  },
+
+  //populate db with sample data
+  init: function() {
+
+  	console.log ("resetting the database")
+	MongoClient.connect(mongourl, function(err, db) {
+		var dbo = db.db("FMSdb");
+		dbo.collection("users").deleteMany({})
+	});
+
+    console.log ("inserting sample data...")
+	let rawdata = fs.readFileSync('example_personality_outputs/oprah.json');
+	let data = JSON.parse(rawdata);
+	//age, age preference, gender, gender preference?
+	data["name"] = "oprah";
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/lebronjames.json');
+	data = JSON.parse(rawdata);
+	//age, age preference, gender, gender preference?
+	data["name"] = "lebronjames";
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/pope.json');
+	data = JSON.parse(rawdata);
+	//age, age preference, gender, gender preference?
+	data["name"] = "pope";
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/trike.json');
+	data = JSON.parse(rawdata);
+	//age, age preference, gender, gender preference?
+	data["name"] = "trike";
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/krungy.json');
+	data = JSON.parse(rawdata);
+	//age, age preference, gender, gender preference?
+	data["name"] = "krungy";
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/faridyu.json');
+	data = JSON.parse(rawdata);
+	//age, age preference, gender, gender preference?
+	data["name"] = "faridyu";
+	insert(data)
+
+
+	rawdata = fs.readFileSync('example_personality_outputs/donfrancisco.json');
+	data = JSON.parse(rawdata);
+	//age, age preference, gender, gender preference?
+	data["name"] = "donfrancisco";
+	insert(data)
+
+	 console.log ("done!!")
   }
 };
 
@@ -37,7 +93,7 @@ function insert(data) {
     // whatever
   }
 
-function insertsample(){
+function init(){
 	MongoClient.connect(mongourl, function(err, db) {
 		var dbo = db.db("FMSdb");
 		dbo.collection("users").deleteMany({})
@@ -85,7 +141,6 @@ function insertsample(){
 	//age, age preference, gender, gender preference?
 	data["name"] = "donfrancisco";
 	insert(data)
-
 }
 
 

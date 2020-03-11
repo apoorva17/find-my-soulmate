@@ -114,6 +114,10 @@ function extractMessage(obj) {
 }
 
 app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
+
+  //Unnecessary!! Just to populate db with sample data
+  db.init()
+
     var posts = getPosts(req.user) 
     
     const profileParams = {
