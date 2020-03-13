@@ -20,6 +20,9 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
+ 
+//Deletes and populate data
+db.populate()
 
 // Use the FacebookStrategy within Passport.
 passport.use(new FacebookStrategy({
@@ -30,20 +33,14 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      //Check whether the User exists or not using profile.id
-      if(config.use_database) {
-        // // if sets to true
-        // pool.query("SELECT * from user_info where user_id="+profile.id, (err,rows) => {
-        //   if(err) throw err;
-        //   if(rows && rows.length === 0) {
-        //       console.log("There is no such user, adding now");
-        //       pool.query("INSERT into user_info(user_id,user_name) VALUES('"+profile.id+"','"+profile.username+"')");
-        //   } else {
-        //       console.log("User already exists in database");
-        //   }
-        // });
-      }
-      return done(null, profile);
+      // user = 
+      // { 
+      //   "_id": profile.id,
+      //   "name": profile.displayName,
+      //   "profilepic": profile.profile_pic,
+      //   "accessToken": accessToken, 
+      // }
+     // db.insert(user)
     });
   }
 ));
@@ -115,8 +112,6 @@ function extractMessage(obj) {
 
 app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
 
-  //Unnecessary!! Just to populate db with sample data
-  db.init()
 
     var posts = getPosts(req.user) 
     
@@ -132,7 +127,7 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
       .then(profile => {
 
         //insert profile into database
-      profile["name"] = req.user.displayName
+      profile["_id"] = req.user.id
       db.insert(profile)
 
       res.json(profile)
