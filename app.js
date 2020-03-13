@@ -33,14 +33,15 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      // user = 
-      // { 
-      //   "_id": profile.id,
-      //   "name": profile.displayName,
-      //   "profilepic": profile.profile_pic,
-      //   "accessToken": accessToken, 
-      // }
-     // db.insert(user)
+      user = 
+      { 
+        "_id": profile.id,
+        "name": profile.displayName,
+        "profilepic": profile.profile_pic,
+        "accessToken": accessToken, 
+      }
+     db.insert(user)
+     return done(null, profile);
     });
   }
 ));
@@ -127,8 +128,10 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
       .then(profile => {
 
         //insert profile into database
-      profile["_id"] = req.user.id
-      db.insert(profile)
+
+      data = profile.result
+      data["_id"] = req.user.id
+      db.insert(data)
 
       res.json(profile)
     })

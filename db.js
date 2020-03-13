@@ -14,7 +14,7 @@ module.exports = {
 	  var dbo = db.db("FMSdb");
 	  dbo.collection(collectionName).updateOne({"_id": data["_id"]}, {$set: data}, {upsert: true}, function(err, res) {
 	    if (err) throw err;
-	    console.log("1 document inserted");
+	    console.log("1 document inserted / updated");
 	    db.close();
 	  });
 
@@ -85,7 +85,7 @@ function insert(data) {
 	  var dbo = db.db("FMSdb");
 	  dbo.collection(collectionName).updateOne({"_id": data["_id"]}, {$set: data}, {upsert: true}, function(err, res) {
 	    if (err) throw err;
-	    console.log("1 document inserted");
+	    console.log("1 document inserted / updated");
 	    db.close();
 	  });
 
