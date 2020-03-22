@@ -33,9 +33,7 @@ exports.getUser = function(user, cb){
 }
     
 exports.personalityToVec = function(user){
-  var data = "./example_personality_outputs"+user+".json";
-  
-  var raw = data['tree']['raw'];
+  var raw = user['tree']['raw'];
   var personality = data[0]['children'];
   var needs = data[1]['children'];
   var values = data[2]['children'];
