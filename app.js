@@ -11,6 +11,11 @@ const express         =     require('express')
   , db                =    require('./db')
   , app               =     express();
 
+var Q = require('q');
+
+var doMatch = require('./doMatch');
+var getPersonalityData = Q.denodeify(doMatch.getPersonalityData);
+
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
