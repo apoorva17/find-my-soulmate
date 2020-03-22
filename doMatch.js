@@ -65,8 +65,8 @@ exports.getClosenessAllUser = function(user,cb){
   
     var matches = [];
     
-    function(personality){
-      personalityVec = personalityToVec(personality);
+    function(user){
+      personalityVec = personalityToVec(user);
       
       UsersList = JSON.parse(usersText);
       
