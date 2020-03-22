@@ -1,7 +1,8 @@
 Setup Instructions
 ===========================
 
-1. Create configuration folder, and create config.js file in it. 
+1. Run sudo apt-get update, sudo apt install mongodb npm nodejs
+2. Create configuration folder, and create config.js file in it. 
    Content of config.js file:
    `module.exports = {
 	  facebook_api_key: FACEBOOK_API_KEY,
@@ -16,5 +17,5 @@ Setup Instructions
 	  database: ""
 	};`
 	Fill in the relevent sections in the config file.
-2. Run `npm install` to install node modules
-3. Run `node app.js` and view web application at `localhost:3000`
+3. Run `npm install` to install node modules
+4. Run `node app.js` and view web application at `localhost:3000`

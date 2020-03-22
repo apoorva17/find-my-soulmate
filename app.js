@@ -7,16 +7,10 @@ const express         =     require('express')
   , config            =     require('./configuration/config')
   , mysql             =     require('mysql')
   , cfenv             =     require('cfenv')
-  , https		  	  =		require('https')
+  , https		  	      =		require('https')
+  , db                =    require('./db')
   , app               =     express();
 
-//Define MySQL parameter in Config.js file.
-const pool = mysql.createPool({
-  host     : config.host,
-  user     : config.username,
-  password : config.password,
-  database : config.database
-});
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
@@ -26,6 +20,9 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
+ 
+//Deletes and populate data
+db.populate()
 
 // Use the FacebookStrategy within Passport.
 passport.use(new FacebookStrategy({
@@ -36,20 +33,15 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      //Check whether the User exists or not using profile.id
-      if(config.use_database) {
-        // if sets to true
-        pool.query("SELECT * from user_info where user_id="+profile.id, (err,rows) => {
-          if(err) throw err;
-          if(rows && rows.length === 0) {
-              console.log("There is no such user, adding now");
-              pool.query("INSERT into user_info(user_id,user_name) VALUES('"+profile.id+"','"+profile.username+"')");
-          } else {
-              console.log("User already exists in database");
-          }
-        });
+      user = 
+      { 
+        "_id": profile.id,
+        "name": profile.displayName,
+        "profilepic": profile.profile_pic,
+        "accessToken": accessToken, 
       }
-      return done(null, profile);
+     db.insert(user)
+     return done(null, profile);
     });
   }
 ));
@@ -120,6 +112,8 @@ function extractMessage(obj) {
 }
 
 app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
+
+
     var posts = getPosts(req.user) 
     
     const profileParams = {
@@ -129,8 +123,16 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
       rawScores: true,
     };
     
+
     personalityInsights.profile(profileParams)
       .then(profile => {
+
+        //insert profile into database
+
+      data = profile.result
+      data["_id"] = req.user.id
+      db.insert(data)
+
       res.json(profile)
     })
       .catch(err => {

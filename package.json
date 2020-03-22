@@ -1,18 +1,19 @@
 {
-	"name": "find-my-soulmate",
-	"version": "0.0.1",
-	"description": "A personality-driven matchmaking service",
-	"dependencies": {
-		"body-parser": "^1.19.0",
-		"cookie-parser": "^1.4.4",
-		"ejs": "1.0.0",
-		"express": "^4.17.1",
-		"express-session": "^1.17.0",
-		"mysql": "^2.18.1",
-		"passport": "0.2.1",
-		"passport-facebook": "latest",
-		"cfenv": "1.0.x",
-		"ibm-watson": "x",
-		"https": "*"
-	}
+  "name": "find-my-soulmate",
+  "version": "0.0.1",
+  "description": "A personality-driven matchmaking service",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cfenv": "1.0.x",
+    "cookie-parser": "^1.4.4",
+    "ejs": "1.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.0",
+    "https": "*",
+    "ibm-watson": "x",
+    "mongodb": "^3.5.4",
+    "mysql": "^2.18.1",
+    "passport": "0.2.1",
+    "passport-facebook": "latest"
+  }
 }
