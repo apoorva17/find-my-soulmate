@@ -3,6 +3,7 @@ var Q = require('q');
 
 var getPersonality = Q.denodeify('./getPersonality');
 var personalityToVec = Q.denodeify(getPersonality.personalityToVec);
+var getUser = Q.denodeify(getPersonality.getUser);
 
 getCloseness = function(v1,v2){
   var norm1 = 0;
