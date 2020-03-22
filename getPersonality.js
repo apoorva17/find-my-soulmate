@@ -28,8 +28,10 @@ exports.getUser = function(user, cb){
   .done();
 }
     
-exports.personalityToVec = function(p){
-  var raw = p['tree']['raw'];
+exports.personalityToVec = function(user){
+  var userData = getUser(user)
+  
+  var raw = userData['tree']['raw'];
   var personality = raw[0]['children'];
   var needs = raw[1]['children'];
   var values = raw[2]['children'];
