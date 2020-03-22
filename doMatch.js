@@ -1,7 +1,7 @@
 var fs = require('fs');
 var Q = require('q');
+var getPersonality = require('./getPersonality');
 
-var getPersonality = Q.denodeify('./getPersonality');
 var personalityToVec = Q.denodeify(getPersonality.personalityToVec);
 var getUser = Q.denodeify(getPersonality.getUser);
 
