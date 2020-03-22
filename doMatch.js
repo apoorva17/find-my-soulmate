@@ -59,7 +59,7 @@ getTopDot = function(d1,d2,n){
 exports.getClosenessAllUser = function(user,cb){
     var personalityVec;
     
-    var UsersList;
+    var UsersList = {};
     var closeness = {};
     var personalities = {};
   
@@ -68,7 +68,7 @@ exports.getClosenessAllUser = function(user,cb){
     function(user){
       personalityVec = personalityToVec(user);
       
-      UsersList = JSON.parse(usersText);
+      UsersList.push("{user:",user,"}");
       
       var promises = [];
       
