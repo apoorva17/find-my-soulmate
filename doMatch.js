@@ -72,7 +72,7 @@ exports.getClosenessAllUser = function(user,cb){
       var promises = [];
       
       for (user in UsersList){
-        promises.push(getHandle(user));
+        promises.push(getUser(user));
       }
       
       return promises;
