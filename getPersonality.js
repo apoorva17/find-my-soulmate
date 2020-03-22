@@ -1,5 +1,6 @@
 var fs = require('fs');
 var Q = require('q');
+var app = require('./app');
 
 var writeFile = Q.denodeify(fs.writeFile);
 var readFile = Q.denodeify(fs.readFile);
