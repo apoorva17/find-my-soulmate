@@ -18,15 +18,11 @@ exports.getUser = function(user, cb){
     cb(null, JSON.parse(content));
   })
   .catch(function(err){
-    console.log('personality not catched')
-    getPosts(user)
+    console.log('personality not catched');
   })
     .then(function(text){
     personalityG = text;
-    return writeFile(fName, JSON.stringify(text));
-  })
-    .then(function(){
-    cb(null, personalityG)
+    return personalityG;
   })
   .catch(function(err){cb(err)})
   .done();
