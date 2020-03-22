@@ -9,7 +9,12 @@ const express         =     require('express')
   , cfenv             =     require('cfenv')
   , https		  	      =		require('https')
   , db                =    require('./db')
-  , app               =     express();
+  , app               =     express()
+  , fs                =   require('fs')
+  , MongoClient       = require('mongodb').MongoClient
+  ,mongourl           = "mongodb://localhost:27017/"
+  ,dbname             = "FMSdb"
+  ,collectionName     = "users";
 
 
 // Passport session setup.
@@ -129,12 +134,32 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
 
         //insert profile into database
 
-      data = profile.result
-      data["_id"] = req.user.id
-      db.insert(data)
+        data = profile.result
+        data["_id"] = req.user.id
 
-      res.json(profile)
-    })
+        db.insert(data)
+
+
+      //======================================================
+      //Code below returns 3 names from the DB
+        MongoClient.connect(mongourl, function(err, db) { 
+          if (err) throw err;
+          var dbo = db.db(dbname);
+          var query = { }
+
+          dbo.collection(collectionName).find(query).limit(3).toArray(function(err, results) {
+            if (err) throw err;
+            for (var result of results) {
+              //the 3 names are here
+              console.log(result.name)
+            }
+            db.close();
+          }) //db find
+        }); //mongoconnect
+        //=======================================================
+
+        res.json(profile)
+      })
       .catch(err => {
       console.log('error:', err);
     });

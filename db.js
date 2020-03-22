@@ -7,18 +7,19 @@ const dbname = "FMSdb"
 const collectionName = "users"
 
 module.exports = {
+
   //insert json data into db
   insert: function (data) {
   	MongoClient.connect(mongourl, function(err, db) {
 	  if (err) throw err;
-	  var dbo = db.db("FMSdb");
+	  var dbo = db.db(dbname);
 	  dbo.collection(collectionName).updateOne({"_id": data["_id"]}, {$set: data}, {upsert: true}, function(err, res) {
 	    if (err) throw err;
 	    console.log("1 document inserted / updated");
 	    db.close();
 	  });
-
 	});
+
   },
 
   //populate db with sample data
@@ -75,6 +76,7 @@ module.exports = {
 	insert(data)
 
 	 console.log ("done!!")
+
   }
 };
 
