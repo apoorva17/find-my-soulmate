@@ -13,10 +13,6 @@ const express         =     require('express')
 
 var Q = require('q');
 
-var doMatch = require('./doMatch');
-// var getPersonalityData = Q.denodeify(doMatch.getPersonalityData);
-
-
 // Passport session setup.
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -99,7 +95,7 @@ const personalityInsights = new PersonalityInsightsV3({
   url: config.personality_insights_url,
 });
 
-exports.getPosts = function(user){
+getPosts = function(user){
   var arr = user._json.posts.data
   var posts = ""
   for (var i = 0; i < arr.length; i++) {
@@ -108,7 +104,7 @@ exports.getPosts = function(user){
   return user
 }
 
-exports.extractMessage = function(obj) {
+extractMessage = function(obj) {
   if (obj.hasOwnProperty('message')) {
     return obj['message']
   } else {
