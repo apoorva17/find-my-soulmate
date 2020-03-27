@@ -146,7 +146,7 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
 });
 
 app.get('/doMatch', function(req, res){
-  doMatch.getCloseness(req.param('user'), function(e,r){
+  doMatch.getClosenessAllUser(req.param('user'), function(e,r){
     if (!e)
       res.json(r);
     else
