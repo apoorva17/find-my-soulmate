@@ -1,12 +1,12 @@
 var fs = require('fs');
 var Q = require('q');
-var app = require('./app');
+var app = require('./app_matchmaking');
 
 var writeFile = Q.denodeify(fs.writeFile);
 var readFile = Q.denodeify(fs.readFile);
 
-import {getPosts} from app;
-import {extractMessage} from app;
+import {getPosts} from './app_matchmaking.js';
+import {extractMessage} from './app_matchmaking.js';
 // var getPosts = Q.denodeify(app.getPosts);
 // var extractMessage = Q.denodeify(app.extractMessage);
 
