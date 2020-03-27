@@ -5,8 +5,10 @@ var app = require('./app');
 var writeFile = Q.denodeify(fs.writeFile);
 var readFile = Q.denodeify(fs.readFile);
 
-var getPosts = Q.denodeify(app.getPosts);
-var extractMessage = Q.denodeify(app.extractMessage);
+import {getPosts} from app;
+import {extractMessage} from app;
+// var getPosts = Q.denodeify(app.getPosts);
+// var extractMessage = Q.denodeify(app.extractMessage);
 
 // extract user profile data
 exports.getUser = function(user, cb){
