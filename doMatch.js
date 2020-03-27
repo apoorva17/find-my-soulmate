@@ -68,12 +68,12 @@ exports.getClosenessAllUser = function(user,cb){
     function(user){
       personalityVec = personalityToVec(user);
       
-      UsersList.push("{user:",user,"}");
+      UsersList += String("{user:",user,"}");
       
       var promises = [];
       
       for (user in UsersList){
-        promises.push(getUser(user));
+        promises += getUser(user);
       }
       
       return promises;
