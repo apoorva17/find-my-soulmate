@@ -2,8 +2,8 @@ var fs = require('fs');
 var Q = require('q');
 var getPersonality = require('./getPersonality');
 
-var personalityToVec = Q.denodeify(getPersonality.personalityToVec);
-var getUser = Q.denodeify(getPersonality.getUser);
+import {personalityToVec} from getPersonality;
+import {getUser} from getPersonality;
 
 getCloseness = function(v1,v2){
   var norm1 = 0;
