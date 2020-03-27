@@ -2,8 +2,8 @@ var fs = require('fs');
 var Q = require('q');
 var getPersonality = require('./getPersonality');
 
-import {personalityToVec} from getPersonality;
-import {getUser} from getPersonality;
+import {personalityToVec} from './getPersonality.js';
+import {getUser} from './getPersonality';
 
 getCloseness = function(v1,v2){
   var norm1 = 0;
@@ -56,7 +56,7 @@ getTopDot = function(d1,d2,n){
   return getTop(d3, n);
 }
 
-exports.getClosenessAllUser = function(user,cb){
+getClosenessAllUser = function(user,cb){
     var personalityVec;
     
     var UsersList = {};
@@ -104,3 +104,4 @@ exports.getClosenessAllUser = function(user,cb){
     .done();
 }
         
+export {getClosenessAllUser};
