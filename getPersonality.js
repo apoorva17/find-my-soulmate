@@ -11,7 +11,7 @@ import {extractMessage} from './app_matchmaking.js';
 // var extractMessage = Q.denodeify(app.extractMessage);
 
 // extract user profile data
-exports.getUser = function(user, cb){
+getUser = function(user, cb){
   var fName = "./example_personality_outputs"+user+".json";
   var personalityG;
   
@@ -30,7 +30,7 @@ exports.getUser = function(user, cb){
   .done();
 }
     
-exports.personalityToVec = function(user){
+personalityToVec = function(user){
   var userData = getUser(user)
   
   var raw = userData['tree']['raw'];
@@ -99,3 +99,5 @@ exports.personalityToVec = function(user){
   }
   return (vec)
 }
+
+export {getUser, personalityToVec};
