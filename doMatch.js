@@ -1,11 +1,62 @@
-var fs = require('fs');
-var Q = require('q');
-var getPersonality = require('./getPersonality');
+const fs = require('fs');
+// var Q = require('q');
+const getPersonality = require('./getPersonality');
 
-import {personalityToVec} from './getPersonality.js';
-import {getUser} from './getPersonality';
+// import {personalityToVec} from './getPersonality.js';
+// import {getUser} from './getPersonality.js';
 
-getCloseness = function(v1,v2){
+module.exports = {
+	getClosenessAllUser: function(user,cb){
+		var personalityVec;
+    
+		var UsersList = {};
+		var closeness = {};
+		var personalities = {};
+  
+		var matches = [];
+    
+		(function(user){
+				personalityVec = getPersonality.personalityToVec(user);
+      
+				UsersList += String("{user:",user,"}");
+      
+				var promises = [];
+      
+				for (user in UsersList){
+					promises += getPersonality.getUser(user);
+				}
+      
+				return promises;
+		})
+    
+		(function(){
+				var i = 0;
+				for (user in UsersList){
+					personalities[user] = getPersonality.personalityToVec(arguments[i]);
+					closeness[user]['p'] = {p: doMatch.getCloseness(personalityVec, personalities[user])};
+					i++;
+				}
+      
+				for (user in closeness){
+					var el = UsersList[user];
+					el['personality'] = doMatch.getTop(personalities[user], 3);
+        
+					el['math'] = closeness[user]['p'];
+        
+					matches.push(el);
+				}
+      
+				cb(null, (matches));
+		})
+		.catch(function(err){
+				cb(err)
+		})
+		.done();
+	}
+}
+
+
+function getCloseness(v1,v2){
   var norm1 = 0;
   
   for (var key in v1){
@@ -30,7 +81,7 @@ getCloseness = function(v1,v2){
     return dot / (norm1*norm2);
 }
 
-getTop = function(dict, n){
+function getTop(dict, n){
   var foo = dict;
   
   var props = Object.keys(foo).map(function(key){
@@ -46,7 +97,7 @@ getTop = function(dict, n){
   return topNObj;
 }
 
-getTopDot = function(d1,d2,n){
+function getTopDot(d1,d2,n){
   var d3 = {};
   for (key in d1){
     if (key in d2){
@@ -56,7 +107,7 @@ getTopDot = function(d1,d2,n){
   return getTop(d3, n);
 }
 
-getClosenessAllUser = function(user,cb){
+function getClosenessAllUser(user,cb){
     var personalityVec;
     
     var UsersList = {};
@@ -65,8 +116,8 @@ getClosenessAllUser = function(user,cb){
   
     var matches = [];
     
-    function(user){
-      personalityVec = personalityToVec(user);
+    (function(user){
+      personalityVec = getPersonality.personalityToVec(user);
       
       UsersList += String("{user:",user,"}");
       
@@ -77,12 +128,12 @@ getClosenessAllUser = function(user,cb){
       }
       
       return promises;
-    }
+    })
     
-    function(){
+    (function(){
       var i = 0;
       for (user in UsersList){
-        personalities[user] = personalityToVec(arguments[i]);
+        personalities[user] = getPersonality.personalityToVec(arguments[i]);
         closeness[user]['p'] = {p: getCloseness(personalityVec, personalities[user])};
         i++;
       }
@@ -103,5 +154,3 @@ getClosenessAllUser = function(user,cb){
     })
     .done();
 }
-        
-export {getClosenessAllUser};
