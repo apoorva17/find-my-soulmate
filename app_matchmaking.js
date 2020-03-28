@@ -7,14 +7,15 @@ const express         =     require('express')
   , config            =     require('./configuration/config')
   , mysql             =     require('mysql')
   , cfenv             =     require('cfenv')
-  , https		  	      =		require('https')
-  , db                =    require('./db')
-  , app               =     express();
+  , https		  	  =		require('https')
+  , db                =     require('./db')
+  , app   			  =     express()
+  , doMatch			  =		require('./doMatch');
 
-var Q = require('q');
+// var Q = require('q');
 
-var doMatch = require('./doMatch');
-import {getClosenessAllUser} from './doMatch.js';
+// var doMatch = require('./doMatch');
+//import {getClosenessAllUser} from './doMatch.js';
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
@@ -98,7 +99,7 @@ const personalityInsights = new PersonalityInsightsV3({
   url: config.personality_insights_url,
 });
 
-getPosts = function(user){
+function getPosts(user){
   var arr = user._json.posts.data
   var posts = ""
   for (var i = 0; i < arr.length; i++) {
@@ -107,7 +108,7 @@ getPosts = function(user){
   return user
 }
 
-extractMessage = function(obj) {
+function extractMessage(obj) {
   if (obj.hasOwnProperty('message')) {
     return obj['message']
   } else {
@@ -155,4 +156,21 @@ app.get('/doMatch', function(req, res){
     
 app.listen(3000);
 
-export {getPosts, extractMessage};
+module.exports = {
+	getPosts: function(user){
+		var arr = user._json.posts.data
+		var posts = ""
+		for (var i = 0; i < arr.length; i++) {
+			posts += app_matchmaking.extractMessage(arr[i])
+		}
+		return user
+	},
+	
+	extractMessage: function(obj){
+		if (obj.hasOwnProperty('message')) {
+			return obj['message']
+		} else {
+			return ""
+		}
+	}
+};
