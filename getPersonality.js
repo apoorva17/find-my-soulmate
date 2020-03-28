@@ -1,21 +1,104 @@
 var fs = require('fs');
-var Q = require('q');
+// var Q = require('q');
 var app = require('./app_matchmaking');
 
-var writeFile = Q.denodeify(fs.writeFile);
-var readFile = Q.denodeify(fs.readFile);
-
-import {getPosts} from './app_matchmaking.js';
-import {extractMessage} from './app_matchmaking.js';
-// var getPosts = Q.denodeify(app.getPosts);
-// var extractMessage = Q.denodeify(app.extractMessage);
-
 // extract user profile data
-getUser = function(user, cb){
+module.exports = {
+	getUser: function(user,cb){
+		var fName = "./example_personality_outputs"+user+".json";
+		var personalityG;
+		
+		fs.readFile(fName)
+		.then(function(content){
+				cb(null, JSON.parse(content));
+		})
+		.catch(function(err){
+				console.log('personality not catched');
+		})
+		.then(function(text){
+				personalityG = text;
+				return personalityG;
+		})
+		.catch(function(err){cb(err)})
+		.done();
+	},
+	
+	personalityToVec: function(user){
+		var userData = getPersonality.getUser(user)
+		
+		var raw = userData['tree']['raw'];
+		var personality = raw[0]['children'];
+		var needs = raw[1]['children'];
+		var values = raw[2]['children'];
+		var behavior = raw[3]['children'];
+		var consumption_preferences = raw[4]['children'];
+  
+		var vec = {};
+  
+		function mergeVec(name, percentage){
+			if (name in vec)
+				vec[name] += percentage;
+			else vec[name] = percentage;
+		}
+  
+		for (x of personality){
+			mergeVec( x['name'], x['percentile']);
+			if ('children' in x){
+				for (y of x['children']){
+					mergeVec(y['name'], y['percentile']);
+					if ('children' in y){
+						for (z of y['children']){
+							mergeVec(z['name'], z['percentile']);
+						}
+					}
+				}
+			}
+		}
+		
+		for (x of needs){
+			mergeVec( x['name'], x['percentile']);
+			if ('children' in x){
+				for (y of x['children']){
+					mergeVec(y['name'], y['percentile']);
+				}
+			}
+		}
+		
+		for (x of values){
+			mergeVec( x['name'], x['percentile']);
+			if ('children' in x){
+				for (y of x['children']){
+					mergeVec(y['name'], y['percentile']);
+				}
+			}
+		}
+		
+		for (x of behavior){
+			mergeVec( x['name'], x['percentage']);
+			if ('children' in x){
+				for (y of x['children']){
+					mergeVec(y['name'], y['percentage']);
+				}
+			}
+		}
+	
+		for (x of consumption_preferences){
+			mergeVec( x['name'], x['score']);
+			if ('children' in x){
+				for (y of x['children']){
+					mergeVec(y['name'], y['score']);
+				}
+			}
+		}
+		return (vec)
+	}
+};
+
+function getUser(user, cb){
   var fName = "./example_personality_outputs"+user+".json";
   var personalityG;
   
-  readFile(fName)
+  fs.readFile(fName)
   .then(function(content){
     cb(null, JSON.parse(content));
   })
@@ -28,9 +111,9 @@ getUser = function(user, cb){
   })
   .catch(function(err){cb(err)})
   .done();
-}
+};
     
-personalityToVec = function(user){
+function personalityToVec(user){
   var userData = getUser(user)
   
   var raw = userData['tree']['raw'];
@@ -98,6 +181,4 @@ personalityToVec = function(user){
     }
   }
   return (vec)
-}
-
-export {getUser, personalityToVec};
+};
