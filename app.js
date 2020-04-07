@@ -34,7 +34,7 @@ passport.use(new FacebookStrategy({
     clientID: config.facebook_api_key,
     clientSecret:config.facebook_api_secret ,
     callbackURL: config.callback_url,
-    profileFields: ['id', 'displayName', 'picture', 'posts']
+    profileFields: ['id', 'displayName', 'picture.type(large)', 'posts']
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -42,7 +42,7 @@ passport.use(new FacebookStrategy({
       { 
         "_id": profile.id,
         "name": profile.displayName,
-        "profilepic": profile.profile_pic,
+        "profilepic": profile.photos[0].value,
         "accessToken": accessToken, 
       }
      db.insert(user)
