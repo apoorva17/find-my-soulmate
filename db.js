@@ -32,47 +32,33 @@ module.exports = {
 	});
 
     console.log ("inserting sample data...")
-	let rawdata = fs.readFileSync('example_personality_outputs/oprah.json');
+	let rawdata = fs.readFileSync('example_personality_outputs/alex.json');
 	let data = JSON.parse(rawdata);
-	data["_id"] = 1
-	data["name"] = "oprah";
 	insert(data)
 
-	rawdata = fs.readFileSync('example_personality_outputs/lebronjames.json');
+	rawdata = fs.readFileSync('example_personality_outputs/harry.json');
 	data = JSON.parse(rawdata);
-	data["_id"] = 2
-	data["name"] = "lebronjames";
 	insert(data)
 
-	rawdata = fs.readFileSync('example_personality_outputs/pope.json');
+	rawdata = fs.readFileSync('example_personality_outputs/jane.json');
 	data = JSON.parse(rawdata);
-	data["_id"] = 3
-	data["name"] = "pope";
 	insert(data)
 
-	rawdata = fs.readFileSync('example_personality_outputs/trike.json');
+	rawdata = fs.readFileSync('example_personality_outputs/michael.json');
 	data = JSON.parse(rawdata);
-	data["_id"] = 4
-	data["name"] = "trike";
 	insert(data)
 
-	rawdata = fs.readFileSync('example_personality_outputs/krungy.json');
+	rawdata = fs.readFileSync('example_personality_outputs/john.json');
 	data = JSON.parse(rawdata);
-	data["_id"] = 5
-	data["name"] = "krungy";
 	insert(data)
 
-	rawdata = fs.readFileSync('example_personality_outputs/faridyu.json');
+	rawdata = fs.readFileSync('example_personality_outputs/tom.json');
 	data = JSON.parse(rawdata);
-	data["_id"] = 6
-	data["name"] = "faridyu";
 	insert(data)
 
 
-	rawdata = fs.readFileSync('example_personality_outputs/donfrancisco.json');
+	rawdata = fs.readFileSync('example_personality_outputs/susan.json');
 	data = JSON.parse(rawdata);
-	data["_id"] = 7
-	data["name"] = "donfrancisco";
 	insert(data)
 
 	 console.log ("done!!")

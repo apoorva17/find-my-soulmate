@@ -69,6 +69,24 @@ app.get('/account', ensureAuthenticated, function(req, res){
   res.render('success', { user: req.user });
 });
 
+app.get('/matches',ensureAuthenticated,function(req, res){
+        //Code below returns 3 names from the DB
+        MongoClient.connect(mongourl, function(err, db) { 
+          if (err)  throw err;
+          var dbo = db.db(dbname);
+          var query = { }
+
+          dbo.collection(collectionName).find(query).limit(3).toArray(function(err, results) {
+            if (err) throw err;
+            var r;
+            res.render('matches', {r:results});
+   
+            db.close();
+          }) //db find
+        }); //mongoconnect
+
+})
+
 app.get('/auth/facebook', passport.authenticate('facebook',{scope:['email','user_posts']}));
 
 app.get('/auth/facebook/callback', 
@@ -138,25 +156,6 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
         data["_id"] = req.user.id
 
         db.insert(data)
-
-
-      //======================================================
-      //Code below returns 3 names from the DB
-        MongoClient.connect(mongourl, function(err, db) { 
-          if (err) throw err;
-          var dbo = db.db(dbname);
-          var query = { }
-
-          dbo.collection(collectionName).find(query).limit(3).toArray(function(err, results) {
-            if (err) throw err;
-            for (var result of results) {
-              //the 3 names are here
-              console.log(result.name)
-            }
-            db.close();
-          }) //db find
-        }); //mongoconnect
-        //=======================================================
 
         res.json(profile)
       })

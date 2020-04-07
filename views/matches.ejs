@@ -23,16 +23,27 @@
     </div>
   </nav>
   <% if (user) { %>
-    <h2>Hello <%= user.displayName %>!</h2>
-    <img src="<%= user.photos[0].value %>">
-    <br><br>
-    If you have analysed your profile, click <a href="/matches">here</a> to view your matches<br>
-    
-    <form action="/api/profile/facebook" method="POST" role="form">
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary"> Analyze My Profile! </button>
+    <h2>Your matches are 
+      <table>
+        <tr>
+      <% for (var result of r) {%>
+      <td>
+      <div>
+        <img src =  <%= result.profilepic %> 
       </div>
-    </form>
+    </td>
+      <% } %></h2>
+    </tr>
+            <tr>
+      <% for (var result of r) {%>
+      <td>
+      <div>
+        <%= result.name %>
+      </div>
+    </td>
+      <% } %></h2>
+    </tr>
+  </table>
   <% } %>
   <div class="logout">
     <a class="btn btn-primary" href="/auth/logout" role="button">Logout</a>
