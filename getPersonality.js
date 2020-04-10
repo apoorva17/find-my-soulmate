@@ -1,6 +1,6 @@
 var fs = require('fs');
 // var Q = require('q');
-var app = require('./app_matchmaking');
+var app = require('./app');
 
 // extract user profile data
 module.exports = {
