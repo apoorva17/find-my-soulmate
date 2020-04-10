@@ -97,16 +97,6 @@ function getTop(dict, n){
   return topNObj;
 }
 
-function getTopDot(d1,d2,n){
-  var d3 = {};
-  for (key in d1){
-    if (key in d2){
-      d3[key] = d1[key]*d2[key];
-    }
-  }
-  return getTop(d3, n);
-}
-
 function getClosenessAllUser(user,cb){
     var personalityVec;
     
