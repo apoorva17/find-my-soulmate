@@ -9,8 +9,13 @@ const express         =     require('express')
   , cfenv             =     require('cfenv')
   , https		  	  =		require('https')
   , db                =     require('./db')
-  , app   			  =     express()
+  , app               =     express()
   , doMatch			  =		require('./doMatch');
+  , fs                =   	require('fs')
+  , MongoClient       = 	require('mongodb').MongoClient
+  ,mongourl           = "mongodb://localhost:27017/"
+  ,dbname             = "FMSdb"
+  ,collectionName     = "users";
 
 // var Q = require('q');
 
@@ -34,7 +39,7 @@ passport.use(new FacebookStrategy({
     clientID: config.facebook_api_key,
     clientSecret:config.facebook_api_secret ,
     callbackURL: config.callback_url,
-    profileFields: ['id', 'displayName', 'picture', 'posts']
+    profileFields: ['id', 'displayName', 'picture.type(large)', 'posts']
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -42,7 +47,7 @@ passport.use(new FacebookStrategy({
       { 
         "_id": profile.id,
         "name": profile.displayName,
-        "profilepic": profile.profile_pic,
+        "profilepic": profile.photos[0].value,
         "accessToken": accessToken, 
       }
      db.insert(user)
@@ -68,6 +73,24 @@ app.get('/', function(req, res){
 app.get('/account', ensureAuthenticated, function(req, res){
   res.render('success', { user: req.user });
 });
+
+app.get('/matches',ensureAuthenticated,function(req, res){
+        //Code below returns 3 names from the DB
+        MongoClient.connect(mongourl, function(err, db) { 
+          if (err)  throw err;
+          var dbo = db.db(dbname);
+          var query = { }
+
+          dbo.collection(collectionName).find(query).limit(3).toArray(function(err, results) {
+            if (err) throw err;
+            var r;
+            res.render('matches', {r:results});
+   
+            db.close();
+          }) //db find
+        }); //mongoconnect
+
+})
 
 app.get('/auth/facebook', passport.authenticate('facebook',{scope:['email','user_posts']}));
 
@@ -134,12 +157,13 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
 
         //insert profile into database
 
-      data = profile.result
-      data["_id"] = req.user.id
-      db.insert(data)
+        data = profile.result
+        data["_id"] = req.user.id
 
-      res.json(profile)
-    })
+        db.insert(data)
+
+        res.json(profile)
+      })
       .catch(err => {
       console.log('error:', err);
     });
