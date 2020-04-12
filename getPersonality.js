@@ -27,11 +27,17 @@ module.exports = {
 		var userData = getPersonality.getUser(user)
 		
 		var raw = userData['tree']['raw'];
-		var personality = raw[0]['children'];
-		var needs = raw[1]['children'];
-		var values = raw[2]['children'];
-		var behavior = raw[3]['children'];
-		var consumption_preferences = raw[4]['children'];
+		var name = raw['name'];
+		var gender = raw['gender'];
+		var age = raw['age'];
+		var genderpref = raw['genderpref'];
+		var ageprefmin = raw['ageprefmin'];
+		var ageprefmax = raw['ageprefmax'];
+		var personality = raw['personality']['children'];
+		var needs = raw['needs']['children'];
+		var values = raw['values']['children'];
+		var behavior = raw['behavior']['children'];
+		var consumption_preferences = raw['consumption_preferences']['children'];
   
 		var vec = {};
   
@@ -46,47 +52,26 @@ module.exports = {
 			if ('children' in x){
 				for (y of x['children']){
 					mergeVec(y['name'], y['percentile']);
-					if ('children' in y){
-						for (z of y['children']){
-							mergeVec(z['name'], z['percentile']);
-						}
-					}
 				}
 			}
 		}
 		
 		for (x of needs){
 			mergeVec( x['name'], x['percentile']);
-			if ('children' in x){
-				for (y of x['children']){
-					mergeVec(y['name'], y['percentile']);
-				}
-			}
 		}
 		
 		for (x of values){
 			mergeVec( x['name'], x['percentile']);
-			if ('children' in x){
-				for (y of x['children']){
-					mergeVec(y['name'], y['percentile']);
-				}
-			}
 		}
 		
 		for (x of behavior){
-			mergeVec( x['name'], x['percentage']);
-			if ('children' in x){
-				for (y of x['children']){
-					mergeVec(y['name'], y['percentage']);
-				}
-			}
+			mergeVec(x['name'], x['percentage']);
 		}
-	
+		
 		for (x of consumption_preferences){
-			mergeVec( x['name'], x['score']);
-			if ('children' in x){
-				for (y of x['children']){
-					mergeVec(y['name'], y['score']);
+			if ('consumption_preferences' in x){
+				for (y of x['consumption_preferences']){
+					mergeVec(y['name'], y['score'])
 				}
 			}
 		}
@@ -117,11 +102,17 @@ function personalityToVec(user){
   var userData = getUser(user)
   
   var raw = userData['tree']['raw'];
-  var personality = raw[0]['children'];
-  var needs = raw[1]['children'];
-  var values = raw[2]['children'];
-  var behavior = raw[3]['children'];
-  var consumption_preferences = raw[4]['children'];
+  var name = raw['name'];
+  var gender = raw['gender'];
+  var age = raw['age'];
+  var genderpref = raw['genderpref'];
+  var ageprefmin = raw['ageprefmin'];
+  var ageprefmax = raw['ageprefmax'];
+  var personality = raw['personality']['children'];
+  var needs = raw['needs']['children'];
+  var values = raw['values']['children'];
+  var behavior = raw['behavior']['children'];
+  var consumption_preferences = raw['consumption_preferences']['children'];
   
   var vec = {};
   
@@ -136,49 +127,29 @@ function personalityToVec(user){
     if ('children' in x){
       for (y of x['children']){
         mergeVec(y['name'], y['percentile']);
-        if ('children' in y){
-          for (z of y['children']){
-            mergeVec(z['name'], z['percentile']);
-          }
-        }
       }
     }
   }
   
   for (x of needs){
     mergeVec( x['name'], x['percentile']);
-    if ('children' in x){
-      for (y of x['children']){
-        mergeVec(y['name'], y['percentile']);
-      }
-    }
   }
   
   for (x of values){
     mergeVec( x['name'], x['percentile']);
-    if ('children' in x){
-      for (y of x['children']){
-        mergeVec(y['name'], y['percentile']);
-      }
-    }
   }
   
   for (x of behavior){
     mergeVec( x['name'], x['percentage']);
-    if ('children' in x){
-      for (y of x['children']){
-        mergeVec(y['name'], y['percentage']);
+  }
+	
+  for (x of consumption_preferences){
+    if ('consumption_preferences' in x){
+      for (y of x['consumption_preferences']){
+	mergeVec(y['name'], y['score'])
       }
     }
   }
   
-  for (x of consumption_preferences){
-    mergeVec( x['name'], x['score']);
-    if ('children' in x){
-      for (y of x['children']){
-        mergeVec(y['name'], y['score']);
-      }
-    }
-  }
   return (vec)
 };
