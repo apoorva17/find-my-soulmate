@@ -26,7 +26,7 @@ module.exports = {
 	personalityToVec: function(user){
 		var userData = getPersonality.getUser(user)
 		
-		var raw = userData['tree']['raw'];
+		var raw = userData;
 		var name = raw['name'];
 		var gender = raw['gender'];
 		var age = raw['age'];
@@ -34,12 +34,18 @@ module.exports = {
 		var ageprefmin = raw['ageprefmin'];
 		var ageprefmax = raw['ageprefmax'];
 		var personality = raw['personality']['children'];
-		var needs = raw['needs']['children'];
-		var values = raw['values']['children'];
-		var behavior = raw['behavior']['children'];
-		var consumption_preferences = raw['consumption_preferences']['children'];
+		var needs = raw['needs'];
+		var values = raw['values'];
+		var behavior = raw['behavior'];
+		var consumption_preferences = raw['consumption_preferences']['consumption_preferences'];
   
 		var vec = {};
+		
+		vec['age'] = age;
+		vec['gender'] = gender;
+		vec['genderpref'] = genderpref;
+  		vec['ageprefmin'] = ageprefmin;
+  		vec['ageprefmax'] = ageprefmax;
   
 		function mergeVec(name, percentage){
 			if (name in vec)
@@ -101,7 +107,7 @@ function getUser(user, cb){
 function personalityToVec(user){
   var userData = getUser(user)
   
-  var raw = userData['tree']['raw'];
+  var raw = userData;
   var name = raw['name'];
   var gender = raw['gender'];
   var age = raw['age'];
@@ -109,13 +115,20 @@ function personalityToVec(user){
   var ageprefmin = raw['ageprefmin'];
   var ageprefmax = raw['ageprefmax'];
   var personality = raw['personality']['children'];
-  var needs = raw['needs']['children'];
-  var values = raw['values']['children'];
-  var behavior = raw['behavior']['children'];
-  var consumption_preferences = raw['consumption_preferences']['children'];
+  var needs = raw['needs'];
+  var values = raw['values'];
+  var behavior = raw['behavior'];
+  var consumption_preferences = raw['consumption_preferences']['consumption_preferences'];
   
   var vec = {};
-  
+	
+  vec['age'] = age;
+  vec['gender'] = gender;
+  vec['genderpref'] = genderpref;
+  vec['ageprefmin'] = ageprefmin;
+  vec['ageprefmax'] = ageprefmax;
+	
+  vec['age']
   function mergeVec(name, percentage){
     if (name in vec)
       vec[name] += percentage;
