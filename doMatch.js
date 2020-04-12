@@ -6,7 +6,7 @@ const getPersonality = require('./getPersonality');
 // import {getUser} from './getPersonality.js';
 
 module.exports = {
-	function getClosenessAllUser(user,cb){
+	getClosenessAllUser: function(user,cb){
 	var userList = {};
 	var promises = {};
 	var personalities = {};
@@ -24,9 +24,9 @@ module.exports = {
 		var closeness = {};
 		for (candidate of UsersList){
 			if ((promises[candidate]['gender'] == promises[user]['genderpref'])
-			    && (promises[candidate]['name'] != promises[user])['name'])
+			    && (promises[candidate]['name'] != promises[user]['name'])
 			    && (promises[candidate]['age'] <= promises[user]['ageprefmax'])
-			    && (promises[candidate]['age'] >= promises[user]['ageprefmin']){
+			    && (promises[candidate]['age'] >= promises[user]['ageprefmin'])){
 				    personalities[candidate] = getPersonality.personalityToVec(candidate);
 				    closeness[candidate] = getCloseness(personalityVec, personalities[candidate]);
 			    }
@@ -41,7 +41,7 @@ module.exports = {
 	var top_candidates = arr.slice(0, 3);	
 	cb(null, (top_candidates));
 	})
-	.catch(function(err)){
+	.catch(function(err){
 	       cb(err)
 	})
 	.done();
@@ -108,9 +108,9 @@ function getClosenessAllUser(user,cb){
 		var closeness = {};
 		for (candidate of UsersList){
 			if ((promises[candidate]['gender'] == promises[user]['genderpref'])
-			    && (promises[candidate]['name'] != promises[user])['name'])
+			    && (promises[candidate]['name'] != promises[user]['name'])
 			    && (promises[candidate]['age'] <= promises[user]['ageprefmax'])
-			    && (promises[candidate]['age'] >= promises[user]['ageprefmin']){
+			    && (promises[candidate]['age'] >= promises[user]['ageprefmin'])){
 				    personalities[candidate] = getPersonality.personalityToVec(candidate);
 				    closeness[candidate] = getCloseness(personalityVec, personalities[candidate]);
 			    }
@@ -125,7 +125,7 @@ function getClosenessAllUser(user,cb){
 	var top_candidates = arr.slice(0, 3);	
 	cb(null, (top_candidates));
 	})
-	.catch(function(err)){
+	.catch(function(err){
 	       cb(err)
 	})
 	.done();
