@@ -6,53 +6,46 @@ const getPersonality = require('./getPersonality');
 // import {getUser} from './getPersonality.js';
 
 module.exports = {
-	getClosenessAllUser: function(user,cb){
-		var personalityVec;
-    
-		var UsersList = {};
+	function getClosenessAllUser(user,cb){
+	var userList = {};
+	var promises = {};
+	var personalities = {};
+	var matches = [];
+	
+	(function(user){
+		personalityVec = getPersonality.personalityToVec(user);
+		userList += user;
+		promises += getUser(user);
+		return promises;
+	})
+	
+	(function(){
+		var candidate;
 		var closeness = {};
-		var personalities = {};
-  
-		var matches = [];
-    
-		(function(user){
-				personalityVec = getPersonality.personalityToVec(user);
-      
-				UsersList += String("{user:",user,"}");
-      
-				var promises = [];
-      
-				for (user in UsersList){
-					promises += getPersonality.getUser(user);
-				}
-      
-				return promises;
-		})
-    
-		(function(){
-				var i = 0;
-				for (user in UsersList){
-					personalities[user] = getPersonality.personalityToVec(arguments[i]);
-					closeness[user]['p'] = {p: doMatch.getCloseness(personalityVec, personalities[user])};
-					i++;
-				}
-      
-				for (user in closeness){
-					var el = UsersList[user];
-					el['personality'] = doMatch.getTop(personalities[user], 3);
-        
-					el['math'] = closeness[user]['p'];
-        
-					matches.push(el);
-				}
-      
-				cb(null, (matches));
-		})
-		.catch(function(err){
-				cb(err)
-		})
-		.done();
+		for (candidate of UsersList){
+			if ((promises[candidate]['gender'] == promises[user]['genderpref'])
+			    && (promises[candidate]['name'] != promises[user])['name'])
+			    && (promises[candidate]['age'] <= promises[user]['ageprefmax'])
+			    && (promises[candidate]['age'] >= promises[user]['ageprefmin']){
+				    personalities[candidate] = getPersonality.personalityToVec(candidate);
+				    closeness[candidate] = getCloseness(personalityVec, personalities[candidate]);
+			    }
+		}
+	
+	var arr = [];
+	for (candidate in closeness){
+		arr.push(closeness[candidate]);
 	}
+	arr.sort(function(a,b){return b - a});
+	
+	var top_candidates = arr.slice(0, 3);	
+	cb(null, (top_candidates));
+	})
+	.catch(function(err)){
+	       cb(err)
+	})
+	.done();
+}
 }
 
 
@@ -98,49 +91,42 @@ function getTop(dict, n){
 }
 
 function getClosenessAllUser(user,cb){
-    var personalityVec;
-    
-    var UsersList = {};
-    var closeness = {};
-    var personalities = {};
-  
-    var matches = [];
-    
-    (function(user){
-      personalityVec = getPersonality.personalityToVec(user);
-      
-      UsersList += String("{user:",user,"}");
-      
-      var promises = [];
-      
-      for (user in UsersList){
-        promises += getUser(user);
-      }
-      
-      return promises;
-    })
-    
-    (function(){
-      var i = 0;
-      for (user in UsersList){
-        personalities[user] = getPersonality.personalityToVec(arguments[i]);
-        closeness[user]['p'] = {p: getCloseness(personalityVec, personalities[user])};
-        i++;
-      }
-      
-      for (user in closeness){
-        var el = UsersList[user];
-        el['personality'] = getTop(personalities[user], 3);
-        
-        el['math'] = closeness[user]['p'];
-        
-        matches.push(el);
-      }
-      
-      cb(null, (matches));
-    })
-    .catch(function(err){
-      cb(err)
-    })
-    .done();
+	var userList = {};
+	var promises = {};
+	var personalities = {};
+	var matches = [];
+	
+	(function(user){
+		personalityVec = getPersonality.personalityToVec(user);
+		userList += user;
+		promises += getUser(user);
+		return promises;
+	})
+	
+	(function(){
+		var candidate;
+		var closeness = {};
+		for (candidate of UsersList){
+			if ((promises[candidate]['gender'] == promises[user]['genderpref'])
+			    && (promises[candidate]['name'] != promises[user])['name'])
+			    && (promises[candidate]['age'] <= promises[user]['ageprefmax'])
+			    && (promises[candidate]['age'] >= promises[user]['ageprefmin']){
+				    personalities[candidate] = getPersonality.personalityToVec(candidate);
+				    closeness[candidate] = getCloseness(personalityVec, personalities[candidate]);
+			    }
+		}
+	
+	var arr = [];
+	for (candidate in closeness){
+		arr.push(closeness[candidate]);
+	}
+	arr.sort(function(a,b){return b - a});
+	
+	var top_candidates = arr.slice(0, 3);	
+	cb(null, (top_candidates));
+	})
+	.catch(function(err)){
+	       cb(err)
+	})
+	.done();
 }
