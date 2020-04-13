@@ -17,11 +17,6 @@ const express         =     require('express')
   ,dbname             = "FMSdb"
   ,collectionName     = "users";
 
-// var Q = require('q');
-
-// var doMatch = require('./doMatch');
-//import {getClosenessAllUser} from './doMatch.js';
-
 // Passport session setup.
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -74,6 +69,8 @@ app.get('/account', ensureAuthenticated, function(req, res){
   res.render('success', { user: req.user });
 });
 
+app.get('/auth/facebook', passport.authenticate('facebook',{scope:['email','user_posts']}));
+
 app.get('/matches',ensureAuthenticated,function(req, res){
 	doMatch.getClosenessAllUser(req.user, function(err, results){
 		if (err){
@@ -99,9 +96,7 @@ app.get('/matches',ensureAuthenticated,function(req, res){
 //          }) //db find
 //       }); //mongoconnect
 
-})
-
-app.get('/auth/facebook', passport.authenticate('facebook',{scope:['email','user_posts']}));
+// })
 
 app.get('/auth/facebook/callback', 
   passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/' }));
