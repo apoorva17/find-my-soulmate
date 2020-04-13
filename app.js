@@ -75,20 +75,29 @@ app.get('/account', ensureAuthenticated, function(req, res){
 });
 
 app.get('/matches',ensureAuthenticated,function(req, res){
+	doMatch.getClosenessAllUser(req.user, function(err, results){
+		if (err){
+			res.json(err);
+		}
+		else{
+			res.render('matches',{r:results});
+		}
+	}
+})
         //Code below returns 3 names from the DB
-        MongoClient.connect(mongourl, function(err, db) { 
-          if (err)  throw err;
-          var dbo = db.db(dbname);
-          var query = { }
+//        MongoClient.connect(mongourl, function(err, db) { 
+//          if (err)  throw err;
+//          var dbo = db.db(dbname);
+//          var query = { }
 
-          dbo.collection(collectionName).find(query).limit(3).toArray(function(err, results) {
-            if (err) throw err;
-            var r;
-            res.render('matches', {r:results});
+//          dbo.collection(collectionName).find(query).limit(3).toArray(function(err, results) {
+//            if (err) throw err;
+//            var r;
+//            res.render('matches', {r:results});
    
-            db.close();
-          }) //db find
-        }); //mongoconnect
+//            db.close();
+//          }) //db find
+//       }); //mongoconnect
 
 })
 
@@ -169,15 +178,6 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
     });
 });
 
-app.get('/doMatch', function(req, res){
-  doMatch.getClosenessAllUser(req.param('user'), function(e,r){
-    if (!e)
-      res.json(r);
-    else
-      res.send(e);
-  });
-});
-    
 app.listen(3000);
 
 module.exports = {
