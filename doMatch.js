@@ -10,7 +10,6 @@ module.exports = {
 	var userList = {};
 	var promises = {};
 	var personalities = {};
-	var matches = [];
 	
 	(function(user){
 		personalityVec = getPersonality.personalityToVec(user);
@@ -78,7 +77,6 @@ function getClosenessAllUser(user,cb){
 	var userList = {};
 	var promises = {};
 	var personalities = {};
-	var matches = [];
 	
 	(function(user){
 		personalityVec = getPersonality.personalityToVec(user);
