@@ -185,7 +185,7 @@ module.exports = {
 		var arr = user._json.posts.data
 		var posts = ""
 		for (var i = 0; i < arr.length; i++) {
-			posts += app_matchmaking.extractMessage(arr[i])
+			posts += app.extractMessage(arr[i])
 		}
 		return user
 	},
