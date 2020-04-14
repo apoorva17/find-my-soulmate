@@ -1,6 +1,6 @@
 ---
 declared-services:
-  personality-insights-tutorial:
+  personality-insights-service:
     label: personality_insights
     plan: lite
 applications:

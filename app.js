@@ -7,7 +7,7 @@ const express         =     require('express')
   , config            =     require('./configuration/config')
   , mysql             =     require('mysql')
   , cfenv             =     require('cfenv')
-  , https		  	  =		require('https')
+  , https		  	      =		  require('https')
   , app               =     express();
 
 //Define MySQL parameter in Config.js file.
@@ -91,6 +91,16 @@ function ensureAuthenticated(req, res, next) {
 // get the app environment from Cloud Foundry
 var appEnv = cfenv.getAppEnv();
 
+// start server on the specified port and binding host
+// For IBM Cloud
+app.listen(appEnv.port, '0.0.0.0', function() {
+
+  // print a message when the server starts listening
+  console.log("server starting on " + appEnv.url);
+});
+// For localhost
+//app.listen(3000);
+
 const PersonalityInsightsV3 = require('ibm-watson/personality-insights/v3');
 const { IamAuthenticator } = require('ibm-watson/auth');
 
@@ -137,5 +147,3 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
       console.log('error:', err);
     });
 });
-
-app.listen(3000);
