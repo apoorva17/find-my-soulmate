@@ -93,13 +93,13 @@ var appEnv = cfenv.getAppEnv();
 
 // start server on the specified port and binding host
 // For IBM Cloud
-app.listen(appEnv.port, '0.0.0.0', function() {
+/*app.listen(appEnv.port, '0.0.0.0', function() {
 
   // print a message when the server starts listening
   console.log("server starting on " + appEnv.url);
-});
+});*/
 // For localhost
-//app.listen(3000);
+app.listen(3000);
 
 const PersonalityInsightsV3 = require('ibm-watson/personality-insights/v3');
 const { IamAuthenticator } = require('ibm-watson/auth');
