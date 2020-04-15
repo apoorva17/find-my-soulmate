@@ -154,7 +154,6 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
 
         data = profile.result
         data["_id"] = req.user.id
-
         db.insert(data)
 
         res.json(profile)

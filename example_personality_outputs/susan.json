@@ -1,8 +1,7 @@
 {
   "gender":"f",
   "age":"24",
-  "lat":"1.3828897",
-  "long":"103.7483103",
+  "location":"Singapore",
   "genderpref":"m",
   "ageprefmin": 20,
   "ageprefmax": 38,
