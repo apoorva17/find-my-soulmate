@@ -1,52 +1,91 @@
 const fs = require('fs');
-// var Q = require('q');
 const getPersonality = require('./getPersonality');
+const app = require('./app');
+const MongoClient = require('mongodb').MongoClient;
+const mongourl = "mongodb://localhost:27017/";
+const dbname = 'FMSdb';
+const config = require('./configuration/config');
+const collectionName = "users";
 
-// import {personalityToVec} from './getPersonality.js';
-// import {getUser} from './getPersonality.js';
+const PersonalityInsightsV3 = require('ibm-watson/personality-insights/v3');
+const { IamAuthenticator } = require('ibm-watson/auth');
+
+const personalityInsights = new PersonalityInsightsV3({
+  version: '2017-10-13',
+  authenticator: new IamAuthenticator({
+    apikey: config.personality_insights_api_key,
+  }),
+  url: config.personality_insights_url,
+});
 
 module.exports = {
-	getClosenessAllUser: function(user,cb){
-	var userList = {};
-	var promises = {};
+	getClosenessAllUser: function(user){
+	MongoClient.connect(mongourl, function(err, db){
+			if (err) throw err;
+			var dbo = db.db(dbname);
+			
+			dbo.collection(collectionName).distinct("name", function(err,result){
+					if (err){
+						throw err;
+					}else{
+						storedata(result);
+					}
+			});
+	});
+	
+	var userList = [];
+	
+	function storedata(x){
+		userList.push(x);
+	};
+	
 	var personalities = {};
 	
-	(function(user){
-		personalityVec = getPersonality.personalityToVec(user);
-		userList += user;
-		promises += getUser(user);
-		return promises;
-	})
+	function getMyPersonality(req,res){
+		var posts = app.getPosts(req.user);
+		
+		const profileParams = {
+			content: posts,
+			contentType: 'text/plain',
+			consumptionPreferences: true,
+			rawScore: true,
+		};
+		
+		personalityInsights.profile(profileParams)
+		.then(profile =>{
+				var personalityVec = profile.result;
+		})
+		.catch(err =>{
+				console.log('error:',err);
+		});
+	};
 	
-	(function(){
-		var candidate;
-		var closeness = {};
-		for (candidate of UsersList){
-			if ((promises[candidate]['gender'] == promises[user]['genderpref'])
-			    && (promises[candidate]['name'] != promises[user]['name'])
-			    && (promises[candidate]['age'] <= promises[user]['ageprefmax'])
-			    && (promises[candidate]['age'] >= promises[user]['ageprefmin'])){
-				    personalities[candidate] = getPersonality.personalityToVec(candidate);
-				    closeness[candidate] = getCloseness(personalityVec, personalities[candidate]);
-			    }
-		}
+	userList.forEach(function(user){
+			personalities[user] = getPersonality.getUser(user);
+	}, function(err){
+		throw err;
+	});
+	
+	var closeness = {};
+	userList.forEach(function(candidate){
+			if ((personalities[candidate]['genderpref'] == personalityVec['gender'])
+			    && (personalities[candidate]['ageprefmin'] <= personalityVec['age'])
+			    && (personalities[candidate]['ageprefmax'] >= personalityVec['age'])){
+			closeness[candidate] = getCloseness(personalityVec, personalities[candidate]);
+				};
+	});
 	
 	var arr = [];
-	for (candidate in closeness){
+	for (var candidate in closeness){
 		arr.push(closeness[candidate]);
-	}
+	};
 	arr.sort(function(a,b){return b - a});
 	
 	var top_candidates = arr.slice(0, 3);	
-	cb(null, (top_candidates));
-	})
-	.catch(function(err){
-	       cb(err)
-	})
-	.done();
-}
-}
-
+	
+	return top_candidates;
+	}
+};
 
 function getCloseness(v1,v2){
   var norm1 = 0;
@@ -71,44 +110,71 @@ function getCloseness(v1,v2){
     }
   }
     return dot / (norm1*norm2);
-}
+};
 
-function getClosenessAllUser(user,cb){
-	var userList = {};
-	var promises = {};
+function getClosenessAllUser(user){
+	MongoClient.connect(mongourl, function(err, db){
+			if (err) throw err;
+			var dbo = db.db(dbname);
+			
+			dbo.collection(collectionName).distinct("name", function(err, result){
+					if (err){
+						throw err;
+					}else{
+						storedata(result);
+					}
+			});
+	});
+	
+	var userList = [];
+	
+	function storedata(x){
+		userList.push(x);
+	};
+	
 	var personalities = {};
 	
-	(function(user){
-		personalityVec = getPersonality.personalityToVec(user);
-		userList += user;
-		promises += getUser(user);
-		return promises;
-	})
+	function getMyPersonality(req, res){
+		var posts = app.getPosts(req.user);
+		
+		const profileParams = {
+			content: posts,
+			contentType: 'text/plain',
+			consumptionPreferences: true,
+			rawScore: true,
+		};
+		
+		personalityInsights.profile(profileParams)
+		.then(profile =>{
+				var personalityVec = profile.result;
+		})
+		.catch(err => {
+				console.log('error:',err);
+		});
+	};
 	
-	(function(){
-		var candidate;
-		var closeness = {};
-		for (candidate of UsersList){
-			if ((promises[candidate]['gender'] == promises[user]['genderpref'])
-			    && (promises[candidate]['name'] != promises[user]['name'])
-			    && (promises[candidate]['age'] <= promises[user]['ageprefmax'])
-			    && (promises[candidate]['age'] >= promises[user]['ageprefmin'])){
-				    personalities[candidate] = getPersonality.personalityToVec(candidate);
-				    closeness[candidate] = getCloseness(personalityVec, personalities[candidate]);
-			    }
-		}
+	userList.forEach(function(user){
+		personalities[user] = getPersonality.getUser(user);
+	}, function(err){
+		throw err;
+	});
+	
+	var closeness = {};
+	userList.forEach(function(candidate){
+			if ((personalities[candidate]['genderpref'] == personalityVec['gender'])
+				&& (personalities[candidate]['ageprefmin'] <= personalityVec['age'])
+				&& (personalities[candidate]['ageprefmax'] >= personalityVec['age'])){
+			closeness[candidate] = getCloseness(personalityVec, personalities[candidate]);
+				};
+	});
 	
 	var arr = [];
-	for (candidate in closeness){
+	for (var candidate in closeness){
 		arr.push(closeness[candidate]);
-	}
+	};
 	arr.sort(function(a,b){return b - a});
 	
-	var top_candidates = arr.slice(0, 3);	
-	cb(null, (top_candidates));
-	})
-	.catch(function(err){
-	       cb(err)
-	})
-	.done();
-}
+	var top_candidates = arr.slice(0, 3);
+	
+	return top_candidates;
+};
