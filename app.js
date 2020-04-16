@@ -7,15 +7,29 @@ const express         =     require('express')
   , config            =     require('./configuration/config')
   , mysql             =     require('mysql')
   , cfenv             =     require('cfenv')
-  , https		  	      =		require('https')
-  , db                =    require('./db')
+  , https		  	      =		  require('https')
+  , db                =     require('./db')
   , app               =     express()
-  , fs                =   require('fs')
-  , MongoClient       = require('mongodb').MongoClient
-  ,mongourl           = "mongodb://localhost:27017/"
-  ,dbname             = "FMSdb"
-  ,collectionName     = "users";
+  , fs                =     require('fs')
+  , MongoClient       =     require('mongodb').MongoClient
+  , mongourl          =     "mongodb://localhost:27017/"
+  , dbname            =     "FMSdb"
+  , collectionName    =     "users"
+  , expressVue        =     require("express-vue");
 
+// Setup express-vue
+const path = require('path');
+const vueOptions = {
+  rootPath: path.join(__dirname, '/views'),
+  head: {
+    styles: [
+      { style: "style/normalize.css" },
+      { style: "style/bootstrap.css" }
+    ],
+  }
+};
+const expressVueMiddleware = expressVue.init(vueOptions);
+app.use(expressVueMiddleware);
 
 // Passport session setup.
 passport.serializeUser(function(user, done) {
@@ -62,11 +76,16 @@ app.use(passport.session());
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req, res){
-  res.render('index', { user: req.user });
+  const data = { };
+  res.renderVue('login.vue', data, vueOptions);
 });
 
 app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('success', { user: req.user });
+  const data = { 
+    user: req.user,
+    isLoading: false
+  };
+  res.renderVue('success.vue', data, vueOptions);
 });
 
 app.get('/matches',ensureAuthenticated,function(req, res){
@@ -78,8 +97,12 @@ app.get('/matches',ensureAuthenticated,function(req, res){
 
           dbo.collection(collectionName).find(query).limit(3).toArray(function(err, results) {
             if (err) throw err;
-            var r;
-            res.render('matches', {r:results});
+            const data = { 
+              r: results,
+              user: req.user,
+              heartBeat: true
+            };
+            res.renderVue('matches.vue', data, vueOptions);
    
             db.close();
           }) //db find
@@ -151,12 +174,19 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
       .then(profile => {
 
         //insert profile into database
-
         data = profile.result
         data["_id"] = req.user.id
-        db.insert(data)
 
-        res.json(profile)
+        //insert preferences into database
+        data["genderpref"] = req.body.genderpref
+        data["ageprefmin"] = req.body.ageprefmin
+        data["ageprefmax"] = req.body.ageprefmax
+        data["selfintro"] = req.body.selfintro
+
+        db.insert(data)
+        
+        //redirect to show the matches
+        res.redirect('/matches')
       })
       .catch(err => {
       console.log('error:', err);
