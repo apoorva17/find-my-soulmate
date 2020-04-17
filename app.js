@@ -72,14 +72,18 @@ app.get('/account', ensureAuthenticated, function(req, res){
 app.get('/auth/facebook', passport.authenticate('facebook',{scope:['email','user_posts']}));
 
 app.get('/matches',ensureAuthenticated,function(req, res){
-		MongoClient.connect(mongourl, function(err, db) {
-				if (err) throw err;
-				var result = doMatch.getClosenessAllUser(req.user);
-				res.render('matches',{r:result});
-				
-				db.close();
+		//MongoClient.connect(mongourl, function(err, db) {
+				//if (err) throw err;
+				doMatch.getClosenessAllUser(req.user, function(err, result){
+						if (err){ 
+							res.render('matches', err);
+						}else{
+							res.render('matches',{r:result});
+						};
+				});
+				//db.close();
 		});
-});
+//});
 
 app.get('/auth/facebook/callback', 
   passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/' }));
