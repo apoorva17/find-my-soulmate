@@ -4,6 +4,7 @@ const getPersonality = require('./getPersonality');
 const MongoClient = require('mongodb').MongoClient;
 const mongourl = "mongodb://localhost:27017/";
 const dbname = 'FMSdb';
+const collectionName = 'users';
 
 // extract user profile data
 module.exports = {
@@ -12,24 +13,33 @@ module.exports = {
 				if (err) throw err;
 				var dbo = db.db(dbname);
 				
-				dbo.colleciton.find({"name":"{$user}"})(function(err, content){
+				dbo.colleciton(collectionName).find({"name":"${user}"}, (err, content) => {
 						if (err) throw err;
 						var personality = content;
 				});
-				return personality;
 		});
+		return personality;
 	},
 	
 	personalityToVec: function(user){
-	
-				var raw = getPersonality.getUser(user);
+		var raw;
+		
+		MongoClient.connect(mongourl, function(err, db){
+				if (err) throw err;
+				var dbo = db.db(dbname);
+				dbo.collection(collectionName).find({"name":"${user}"}, (err, content) => {
+						if (err) throw err;
+						raw = content;
+						console.log(raw);
+				});
+				
 				var name = raw['name'];
-				var gender = raw['gender'];
-				var age = raw['age'];
-				var genderpref = raw['genderpref'];
-				var ageprefmin = raw['ageprefmin'];
-				var ageprefmax = raw['ageprefmax'];
-				var personality = raw['personality']['children'];
+				// var gender = raw['gender'];
+				// var age = raw['age'];
+				// var genderpref = raw['genderpref'];
+				// var ageprefmin = raw['ageprefmin'];
+				// var ageprefmax = raw['ageprefmax'];
+				var personality = raw["personality"]['children'];
 				var needs = raw['needs'];
 				var values = raw['values'];
 				var behavior = raw['behavior'];
@@ -73,12 +83,14 @@ module.exports = {
 				for (x of consumption_preferences){
 					if ('consumption_preferences' in x){
 						for (y of x['consumption_preferences']){
-							mergeVec(y['name'], y['score'])
+							mergeVec(y['name'], y['score']);
 						}
 					}
 				}
-				return (vec)
-		}
+				return vec;
+		});
+	}
+
 };
 
 function getUser(user){
@@ -86,23 +98,33 @@ function getUser(user){
 			if (err) throw err;
 			var dbo = db.db(dbname);
 			
-			dbo.collection.find({"name":"{$user}"})(function(err, content){
+			dbo.collection(collectionName).find({"name":"${user}"}, (err, content) => {
 					if (err) throw err;
 					var personality = content;
 			});
-			return personality;
 	});
+	return personality;
 };
     
 function personalityToVec(user){
+	var raw;
 	
-			var raw = getUser(user);
+	MongoClient.connect(mongourl, function(err, db){
+			if (err) throw err;
+			var dbo = db.db(dbname);
+			dbo.collection(collectionName).find({"name":"${user}"}, (err, content) => {
+					if (err) throw err;
+					raw = content;
+			
+			console.log(raw);
+			});
+			//return raw;
 			var name = raw['name'];
-		    var gender = raw['gender'];
-		    var age = raw['age'];
-		    var genderpref = raw['genderpref'];
-		    var ageprefmin = raw['ageprefmin'];
-		    var ageprefmax = raw['ageprefmax'];
+		    // var gender = raw['gender'];
+		    // var age = raw['age'];
+		    // var genderpref = raw['genderpref'];
+		    // var ageprefmin = raw['ageprefmin'];
+		    // var ageprefmax = raw['ageprefmax'];
 		    var personality = raw['personality']['children'];
 		    var needs = raw['needs'];
 		    var values = raw['values'];
@@ -110,7 +132,7 @@ function personalityToVec(user){
 		    var consumption_preferences = raw['consumption_preferences']['consumption_preferences'];
 		  
 		    var vec = {};
-			
+	
 		    vec['age'] = age;
 		    vec['gender'] = gender;
 		    vec['genderpref'] = genderpref;
@@ -147,10 +169,10 @@ function personalityToVec(user){
 		    for (x of consumption_preferences){
 		    	if ('consumption_preferences' in x){
 		    		for (y of x['consumption_preferences']){
-		    			mergeVec(y['name'], y['score'])
+		    			mergeVec(y['name'], y['score']);
 		    		}
 		    	}
 		    }
-		    
-		    return (vec)
+		    return vec;
+	});
 }
