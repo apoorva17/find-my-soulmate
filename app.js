@@ -148,7 +148,7 @@ function getPosts(user) {
   for (var i = 0; i < arr.length; i++) {
     posts += extractMessage(arr[i])
   }
-  return user
+  return posts
 }
 
 function extractMessage(obj) {
@@ -160,8 +160,6 @@ function extractMessage(obj) {
 }
 
 app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
-
-
     var posts = getPosts(req.user) 
     
     const profileParams = {
