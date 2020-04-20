@@ -69,22 +69,18 @@
           </div>
           <div class="form-control describe">
             <div class="self-describe">How would you describe yourself to someone you just met?</div>
-            <textarea rows="5" maxlength="1000" name='selfintro' form='pref_form'></textarea>
+            <textarea rows="5" maxlength="1000" name='selfintro' form='pref_form' ref="selfintro"></textarea>
           </div>
           <div class="form-control">
-            <input class="commit-btn" type="submit" value="Analyze My Profile & Match!" />
+            <button class="commit-btn" type="submit" @click="matches">Analyze My Profile & Match!</button>
           </div>
         </form>
-          <!-- <button class="commit-btn" @click="match">Analyze My Profile & Match!</button>-->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-//import { CoolSelect } from "vue-cool-select";
-//import "vue-cool-select/dist/themes/bootstrap.css";
-
 export default {
   name: "home",
   //components: { CoolSelect },
@@ -96,14 +92,16 @@ export default {
     logout() {
       window.location.href = "/";
     },
-    changeStartAge(val) {
-      this.startAge = val;
-      this.endAge = val + 1;
-    },
-    changeEndAge(val) {
-      this.endAge = val;
-      if (this.endAge <= this.startAge) {
-        this.endAge = this.startAge + 1;
+    matches(event) {
+      const post_len = this.posts_len
+      const intro_len = this.$refs.selfintro.value.split(" ").length
+      const total_len = post_len+intro_len
+      if (total_len <= 105) {
+        alert("Your Facebook posts plus your self introduction should reach at least 100 words! Post more contents or provide more introduction and try again :)")
+        event.preventDefault();
+        return false;
+      } else {
+        return true;
       }
     }
   },
@@ -116,7 +114,6 @@ export default {
     }
   },
   mounted() {
-
   }
 };
 </script>

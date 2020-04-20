@@ -83,9 +83,14 @@ app.get('/', function(req, res){
 });
 
 app.get('/account', ensureAuthenticated, function(req, res){
+  // get len of facebook posts
+  var posts = getPosts(req.user)
+  var posts_len = posts.split(" ").length
+
   const data = { 
     user: req.user,
-    isLoading: false
+    isLoading: false,
+    posts_len: posts_len
   };
   res.renderVue('success.vue', data, vueOptions);
 });
