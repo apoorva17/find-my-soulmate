@@ -15,7 +15,9 @@ const express         =     require('express')
   , mongourl          =     "mongodb://localhost:27017/"
   , dbname            =     "FMSdb"
   , collectionName    =     "users"
-  , expressVue        =     require("express-vue");
+  , expressVue        =     require("express-vue")
+  , doMatch	          =		  require('./doMatch')
+  , getPersonality	  =		  require('./getPersonality');
 
 // Setup express-vue
 const path = require('path');
@@ -89,25 +91,25 @@ app.get('/account', ensureAuthenticated, function(req, res){
 });
 
 app.get('/matches',ensureAuthenticated,function(req, res){
-        //Code below returns 3 names from the DB
-        MongoClient.connect(mongourl, function(err, db) { 
-          if (err)  throw err;
-          var dbo = db.db(dbname);
-          var query = { }
-
-          dbo.collection(collectionName).find(query).limit(3).toArray(function(err, results) {
-            if (err) throw err;
-            const data = { 
-              r: results,
-              user: req.user,
-              heartBeat: true
-            };
-            res.renderVue('matches.vue', data, vueOptions);
-   
-            db.close();
-          }) //db find
-        }); //mongoconnect
-
+  //Code below returns 3 names from the DB
+  doMatch.getClosenessAllUser(req.user).then(result => {
+    MongoClient.connect(mongourl, function(err, db){
+      if (err) throw err;
+      var dbo = db.db(dbname);
+      var query = {"name":{$in: result}};
+      
+      dbo.collection(collectionName).find(query).limit(3).toArray().then(results => {
+        if (err) throw err;
+        const data = { 
+          r: results,
+          user: req.user,
+          heartBeat: true
+        };
+        res.renderVue('matches.vue', data, vueOptions);
+        db.close();
+      })
+    })
+  })
 })
 
 app.get('/auth/facebook', passport.authenticate('facebook',{scope:['email','user_posts']}));
@@ -194,3 +196,22 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
 });
 
 app.listen(3000);
+
+module.exports = {
+	getPosts: function(user){
+		var arr = user._json.posts.data
+		var posts = ""
+		for (var i = 0; i < arr.length; i++) {
+			posts += app.extractMessage(arr[i])
+		}
+		return user
+	},
+	
+	extractMessage: function(obj){
+		if (obj.hasOwnProperty('message')) {
+			return obj['message']
+		} else {
+			return ""
+		}
+	}
+};

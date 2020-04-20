@@ -27,7 +27,7 @@
             <img class="avatar" :src="item.profilepic" alt />
             <div class="name">{{item.name}}</div>
             <!-- mock match score-->
-            <div class="percent">97% match</div>
+            <div class="percent">Top {{index+1}} match</div>
             <button class="chat-btn">
               <i class="iconfont icon-chat"></i>
               <span>Chat</span>
