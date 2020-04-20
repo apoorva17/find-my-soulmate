@@ -75,7 +75,7 @@ module.exports = {
 function personalityToVec(raw){
 	
 			//return raw;
-			var name = raw['name'];
+		    var name = raw['name'];
 		    var gender = raw['gender'];
 		    var age = raw['age'];
 		    var genderpref = raw['genderpref'];
@@ -89,17 +89,12 @@ function personalityToVec(raw){
 		  
 		    var vec = {};
 	
-		    if (typeof(age) != "undefined"){
-		    	vec['age'] = age;
-			}
-				
-			if (typeof(gender) != "undefined"){
-				vec['gender'] = gender;
-			}
+		    vec['age'] = age;
+		    vec['gender'] = gender;
 			
-			vec['genderpref'] = genderpref;
-			vec['ageprefmin'] = ageprefmin;
-			vec['ageprefmax'] = ageprefmax;
+		    vec['genderpref'] = genderpref;
+		    vec['ageprefmin'] = ageprefmin;
+		    vec['ageprefmax'] = ageprefmax;
 		    
 		    function mergeVec(name, percentage){
 		    	if (name in vec)
