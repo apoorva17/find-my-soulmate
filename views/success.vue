@@ -39,17 +39,33 @@
         </div>
         <form action="/api/profile/facebook" method="POST" id="pref_form">
           <div class="form-control">
-            <label for="gender">Gender Preference</label>
-            <select class = "gender-select" id="gender" name="genderpref">
+            <label for="selfgender">Your Gender</label>
+            <select class = "gender-select" id="selfgender" name="gender">
               <option value="f">Female</option>
               <option value="m">Male</option>
             </select>
           </div>
           <div class="form-control">
-            <label for="age">Age Preference</label>
-            <input class="age-select" type="text" name="ageprefmin" />
+            <label for="selfage">Your Age</label>
+            <input type="number" min="18" max="100" 
+             value="18" class="age-select" id="selfage" name="age">
+          </div>
+          <div class="form-control">
+            <label class="pref" for="gender">Gender Preference</label>
+            <select class = "gender-select" id="gender" name="genderpref">
+              <option value="m">Male</option>
+              <option value="f">Female</option>
+            </select>
+          </div>
+          <div class="form-control">
+            <label class="pref" for="ageprefmin">Age Preference</label>
+            <input type="number" min="18" max="100" 
+             value="18" class="age-select" name="ageprefmin" id="ageprefmin"
+             onchange="document.getElementById('ageprefmax').min=this.value;">
             <span class="to"> to </span>
-            <input class="age-select" type="text" name="ageprefmax" />
+            <input type="number" min="document.getElementById('ageprefmin').value" max="100" 
+             value="18"
+             class="age-select" name="ageprefmax" id="ageprefmax">
           </div>
           <div class="form-control describe">
             <div class="self-describe">How would you describe yourself to someone you just met?</div>
@@ -66,7 +82,7 @@
 </template>
 
 <script>
-import { CoolSelect } from "vue-cool-select";
+//import { CoolSelect } from "vue-cool-select";
 //import "vue-cool-select/dist/themes/bootstrap.css";
 
 export default {
@@ -89,17 +105,7 @@ export default {
       if (this.endAge <= this.startAge) {
         this.endAge = this.startAge + 1;
       }
-    },
-    //match() {
-      //window.location.href = "/matches";
-      //this.isLoading = true
-      //setTimeout(() => {
-        //window.location.href = "/matches";
-        //axios.post('/api/profile/facebook');
-        //this.httpReq("/api/profile/facebook", {'data':'test'});
-        //window.location.href = "/matches";
-      //}, 1500);
-    //}
+    }
   },
   computed: {
     genders() {
@@ -110,6 +116,7 @@ export default {
     }
   },
   mounted() {
+
   }
 };
 </script>
@@ -287,6 +294,9 @@ export default {
     }
     label {
       min-width: 220px;
+      &.pref {
+        color: #007fcc;
+      }
     }
     textarea {
       margin-top: 15px;

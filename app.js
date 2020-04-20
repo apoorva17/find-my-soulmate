@@ -179,6 +179,8 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
         data["_id"] = req.user.id
 
         //insert preferences into database
+        data["age"] = req.body.age
+        data["gender"] = req.body.gender
         data["genderpref"] = req.body.genderpref
         data["ageprefmin"] = req.body.ageprefmin
         data["ageprefmax"] = req.body.ageprefmax

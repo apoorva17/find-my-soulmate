@@ -38,21 +38,34 @@ module.exports = {
 			personalities = {};
 			
 			for (record of records) {
+				if ((personalityVec["name"] != record["name"])
+					&&(personalityVec["ageprefmin"] <= record["age"])
+				&&(personalityVec["ageprefmax"] >= record["age"])
+				&&(personalityVec["genderpref"] == record["gender"])
+				&&(personalityVec["gender"] == record["genderpref"])
+				&&(personalityVec["age"] >= record["ageprefmin"])
+				&&(personalityVec["age"] <= record["ageprefmax"])){
 					var candidate = record["name"];
 					personalities[candidate] = getPersonality.personalityToVec(record);
 					
 					var norm1 = 0;
 					var norm2 = 0;
 					var dot = 0;
+					
+					var infoList = ["age","gender","genderpref","ageprefmin","ageprefmax"];
 			
 					for (var key in personalityVec){
-						norm1 += personalityVec[key]*personalityVec[key];
-						norm1 = Math.sqrt(norm1);
+						if (infoList.indexOf(key) === -1){
+							norm1 += personalityVec[key]*personalityVec[key];
+							norm1 = Math.sqrt(norm1);
+						}
 					};
 			
 					for (var key in personalities[candidate]){
-						norm2 += personalities[candidate][key]*personalities[candidate][key];
-						norm2 = Math.sqrt(norm2);
+						if (infoList.indexOf(key) === -1){
+							norm2 += personalities[candidate][key]*personalities[candidate][key];
+							norm2 = Math.sqrt(norm2);
+						}
 					};
 				
 					for (var key in personalityVec){
@@ -63,6 +76,7 @@ module.exports = {
 			
 					closeness[candidate] = dot/(norm1*norm2);
 				}
+			}
 			return closeness;
 		}
 		
@@ -82,28 +96,12 @@ module.exports = {
 			var matches = matches.split(",");
 			return matches;
 		}
-		
-		var arr = user._json.posts.data
-		var posts = ""
-		for (var i = 0; i < arr.length; i++) {
-			if (arr[i].hasOwnProperty('message')){
-				posts += arr[i]['message']
-			}
-		}
-		
-		const profileParams = {
-			content: posts,
-			contentType: 'text/plain',
-			consumptionPreferences: true,
-			rawScores: true,
-		}
-		
-		return personalityInsights.profile(profileParams)
-		.then(profile => {
-				data = profile.result
-				data["_id"] = user.id
-				data["name"] = user.displayName
-				return getPersonality.personalityToVec(data);
+				
+		var myName = user["displayName"];
+		return getRecords({"name":myName})
+		.then(myInfo => {
+				var myInfo = myInfo[0];
+				return getPersonality.personalityToVec(myInfo);
 		})
 		.then(personalityVec => {
 			return getRecords({ })
@@ -118,6 +116,5 @@ module.exports = {
 		.catch(err => {
 				throw err;
 		})
-
 	}
 }
