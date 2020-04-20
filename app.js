@@ -148,7 +148,7 @@ function getPosts(user) {
   for (var i = 0; i < arr.length; i++) {
     posts += extractMessage(arr[i])
   }
-  return user
+  return posts
 }
 
 function extractMessage(obj) {
@@ -160,9 +160,8 @@ function extractMessage(obj) {
 }
 
 app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
-
-
     var posts = getPosts(req.user) 
+    posts = posts + req.body.selfintro
     
     const profileParams = {
       content: posts,
@@ -180,6 +179,8 @@ app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
         data["_id"] = req.user.id
 
         //insert preferences into database
+        data["age"] = req.body.age
+        data["gender"] = req.body.gender
         data["genderpref"] = req.body.genderpref
         data["ageprefmin"] = req.body.ageprefmin
         data["ageprefmax"] = req.body.ageprefmax
