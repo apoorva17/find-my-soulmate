@@ -53,7 +53,7 @@
           </div>
           <div class="form-control describe">
             <div class="self-describe">How would you describe yourself to someone you just met?</div>
-            <textarea rows="5" maxlength="300" name='selfintro' form='pref_form'></textarea>
+            <textarea rows="5" maxlength="1000" name='selfintro' form='pref_form'></textarea>
           </div>
           <div class="form-control">
             <input class="commit-btn" type="submit" value="Analyze My Profile & Match!" />

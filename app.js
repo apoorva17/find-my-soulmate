@@ -161,6 +161,7 @@ function extractMessage(obj) {
 
 app.post('/api/profile/facebook', ensureAuthenticated, function(req, res){
     var posts = getPosts(req.user) 
+    posts = posts + req.body.selfintro
     
     const profileParams = {
       content: posts,
