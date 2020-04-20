@@ -86,9 +86,9 @@ app.get('/matches',ensureAuthenticated,function(req, res){
 			//			db.close();
 			//	})
 		//})
-		doMatch.getClosenessAllUser(req.user, function(err, result){
-				if (err) throw err;
-				console.log(result);
+		doMatch.getClosenessAllUser(req.user).then(result => {
+				console.log("app.js" + result);
+        res.render("matches",{r:result});
 		})
 });
 

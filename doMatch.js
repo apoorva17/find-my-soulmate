@@ -21,7 +21,7 @@ const personalityInsights = new PersonalityInsightsV3({
 });
 
 module.exports = {
-	getClosenessAllUser: function(user){
+	getClosenessAllUser: async function(user){
 		async function getRecords(query){
 			try {
 				var db = await MongoClient.connect(mongourl);
@@ -104,114 +104,20 @@ module.exports = {
 				return getPersonality.personalityToVec(data);
 		})
 		.then(personalityVec => {
-				return getRecords({ })
-				.then(records => {
-						return getCloseness(personalityVec, records);
-		})
+			return getRecords({ })
+			.then(records => {
+					return getCloseness(personalityVec, records);
+			})
 		})
 		.then(closeness => {
-				var x = getTop(closeness);
-				console.log(x);
-				return x;
+			var x = getTop(closeness);
+			console.log("closeness" + x);
+			return x;
 		})
 		.catch(err => {
 				throw err;
 		})
+
 	}
 }
 
-function getClosenessAllUser(user){
-	
-	async function getRecords(){
-		try {
-			db = await MongoClient.connect(mongourl);
-			var dbo = db.db(dbname);
-			records = await dbo.collection(collectionName).find().toArray();
-			return records
-		}catch (err){
-			throw err;
-		}
-	}
-	
-	function getCloseness(personalityVec, records){
-		closeness = {};
-		personalities = {};
-			
-		for (record of records) {
-			var candidate = record["name"];
-			personalities[candidate] = getPersonality.personalityToVec(record);
-					
-			var norm1 = 0;
-			var norm2 = 0;
-			var dot = 0;
-			
-			for (var key in personalityVec){
-				norm1 += personalityVec[key]*personalityVec[key];
-				norm1 = Math.sqrt(norm1);
-			};
-			
-			for (var key in personalities[candidate]){
-				norm2 += personalities[candidate][key]*personalities[candidate][key];
-				norm2 = Math.sqrt(norm2);
-			};
-				
-			for (var key in personalityVec){
-				if (key in personalities[candidate]){
-					dot += personalityVec[key]*personalities[candidate][key];
-				}
-			};
-			
-			closeness[candidate.toString()] = dot/(norm1*norm2);
-		}
-		return closeness;
-	}
-	
-	function getTop(closeness){
-		var arr = Object.keys(closeness).map(function (key){
-				return {key:key, value:this[key]}
-		}, closeness);
-		
-		arr.sort(function(a,b){return b.value-a.value})
-		
-		var top_candidates = arr.slice(0,3).reduce(function(obj, candidate){
-				obj[candidate.key] = candidate.value;
-				return obj},{})
-		console.log(top_candidates);
-		return top_candidates;
-	}
-	
-	var arr = user._json.posts.data
-	var posts = ""
-	for (var i = 0; i < arr.length; i++) {
-		if (arr[i].hasOwnProperty('message')){
-			posts += arr[i]['message']
-		}
-	}
-	
-	const profileParams = {
-		content: posts,
-		contentType: 'text/plain',
-		consumptionPreferences: true,
-		rawScores: true,
-	}
-		
-	personalityInsights.profile(profileParams)
-	.then(profile => {
-			data = profile.result
-			data["_id"] = user.id
-			data["name"] = user.displayName
-			return getPersonality.personalityToVec(data);
-	})
-	.then(personalityVec => {
-			return getCloseness(personalityVec, getRecords());
-	})
-	.then(closeness => {
-			return getTop(closeness);
-	})
-	.then(top_candidates => {
-			cb(top_candidates);
-	})
-	.catch(err => {
-			throw err;
-	});
-}
