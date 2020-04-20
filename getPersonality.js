@@ -10,30 +10,30 @@ const collectionName = 'users';
 module.exports = {
 	personalityToVec: function(raw){
 		var name = raw['name'];
-				// var gender = raw['gender'];
-				// var age = raw['age'];
-				// var genderpref = raw['genderpref'];
-				// var ageprefmin = raw['ageprefmin'];
-				// var ageprefmax = raw['ageprefmax'];
-				var personality = raw["personality"];
-				var needs = raw['needs'];
-				var values = raw['values'];
-				var behavior = raw['behavior'];
-				var consumption_preferences = raw['consumption_preferences'];
+		var gender = raw['gender'];
+		var age = raw['age'];
+		var genderpref = raw['genderpref'];
+		var ageprefmin = raw['ageprefmin'];
+		var ageprefmax = raw['ageprefmax'];
+		var personality = raw["personality"];
+		var needs = raw['needs'];
+		var values = raw['values'];
+		var behavior = raw['behavior'];
+		var consumption_preferences = raw['consumption_preferences'];
   
-				var vec = {};
+		var vec = {};
 		
-				//vec['age'] = age;
-				//vec['gender'] = gender;
-				//vec['genderpref'] = genderpref;
-				//vec['ageprefmin'] = ageprefmin;
-				//vec['ageprefmax'] = ageprefmax;
-	  
-				function mergeVec(name, percentage){
-					if (name in vec)
-						vec[name] += percentage;
-					else vec[name] = percentage;
-				}
+		vec['age'] = age;
+		vec['gender'] = gender;
+		vec['genderpref'] = genderpref;
+		vec['ageprefmin'] = ageprefmin;
+		vec['ageprefmax'] = ageprefmax;
+		
+		function mergeVec(name, percentage){
+			if (name in vec)
+				vec[name] += percentage;
+			else vec[name] = percentage;
+		}
 		  
 				for (let x of personality){
 					mergeVec(x["name"],x["percentile"]);
@@ -72,25 +72,15 @@ module.exports = {
 
 };
     
-function personalityToVec(user){
-	var raw;
+function personalityToVec(raw){
 	
-	MongoClient.connect(mongourl, function(err, db){
-			if (err) throw err;
-			var dbo = db.db(dbname);
-			dbo.collection(collectionName).find({"name":"${user}"}, (err, content) => {
-					if (err) throw err;
-					raw = content;
-			
-			console.log(raw);
-			});
 			//return raw;
 			var name = raw['name'];
-		    // var gender = raw['gender'];
-		    // var age = raw['age'];
-		    // var genderpref = raw['genderpref'];
-		    // var ageprefmin = raw['ageprefmin'];
-		    // var ageprefmax = raw['ageprefmax'];
+		    var gender = raw['gender'];
+		    var age = raw['age'];
+		    var genderpref = raw['genderpref'];
+		    var ageprefmin = raw['ageprefmin'];
+		    var ageprefmax = raw['ageprefmax'];
 		    var personality = raw['personality']['children'];
 		    var needs = raw['needs'];
 		    var values = raw['values'];
@@ -99,11 +89,17 @@ function personalityToVec(user){
 		  
 		    var vec = {};
 	
-		    //vec['age'] = age;
-		    //vec['gender'] = gender;
-		    //vec['genderpref'] = genderpref;
-		    //vec['ageprefmin'] = ageprefmin;
-		    //vec['ageprefmax'] = ageprefmax;
+		    if (typeof(age) != "undefined"){
+		    	vec['age'] = age;
+			}
+				
+			if (typeof(gender) != "undefined"){
+				vec['gender'] = gender;
+			}
+			
+			vec['genderpref'] = genderpref;
+			vec['ageprefmin'] = ageprefmin;
+			vec['ageprefmax'] = ageprefmax;
 		    
 		    function mergeVec(name, percentage){
 		    	if (name in vec)
@@ -140,5 +136,4 @@ function personalityToVec(user){
 		    	}
 		    }
 		    return vec;
-	});
 }
