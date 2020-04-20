@@ -23,7 +23,7 @@
         <div class="match-title">Your matches today</div>
         <div class="match-time">Expire on {{date}}</div>
         <div class="match-result">
-          <div class="match-item" v-for="(item, index) in r" :key="index">
+          <div class="match-item" v-for="(item, index) in r" :key="index" v-if="r.length > 0">
             <img class="avatar" :src="item.profilepic" alt />
             <div class="name">{{item.name}}</div>
             <!-- mock match score-->
@@ -32,6 +32,9 @@
               <i class="iconfont icon-chat"></i>
               <span>Chat</span>
             </button>
+          </div>
+          <div class v-if="r.length == 0">
+            <h2> You currently don't have any matches! Try again later! </h2>
           </div>
         </div>
       </div>
