@@ -69,7 +69,7 @@
           </div>
           <div class="form-control describe">
             <div class="self-describe">How would you describe yourself to someone you just met?</div>
-            <textarea rows="5" maxlength="1000" name='selfintro' form='pref_form' ref="selfintro"></textarea>
+            <textarea rows="3" maxlength="2000" name='selfintro' form='pref_form' ref="selfintro"></textarea>
           </div>
           <div class="form-control">
             <button class="commit-btn" type="submit" @click="matches">Analyze My Profile & Match!</button>
@@ -282,7 +282,7 @@ export default {
     font-size: 24px;
     display: flex;
     align-items: center;
-    margin-top: 40px;
+    margin-top: 32px;
     &.first {
       margin-top: 40px;
     }
@@ -345,7 +345,7 @@ export default {
       margin-left: 35%;
       margin-left: 35%;
       border-radius: 60px;
-      font-size: 25px;
+      font-size: 20px;
       box-sizing: border-box;
       background-image: none;
       cursor: pointer;
