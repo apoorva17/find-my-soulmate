@@ -10,7 +10,8 @@ const express         =     require('express')
   , https	      =	    require('https')
   , db                =     require('./db')
   , app               =     express()
-  , doMatch	      =		require('./doMatch')
+  , doMatch	          =		require('./doMatch')
+  , getPersonality	  =		require('./getPersonality')
   , fs                =   	require('fs')
   , MongoClient       = 	require('mongodb').MongoClient
   ,mongourl           = "mongodb://localhost:27017/"
@@ -45,7 +46,7 @@ passport.use(new FacebookStrategy({
         "profilepic": profile.photos[0].value,
         "accessToken": accessToken, 
       }
-     db.insert(user)
+     //db.insert(user)
      return done(null, profile);
     });
   }
@@ -72,18 +73,24 @@ app.get('/account', ensureAuthenticated, function(req, res){
 app.get('/auth/facebook', passport.authenticate('facebook',{scope:['email','user_posts']}));
 
 app.get('/matches',ensureAuthenticated,function(req, res){
-		//MongoClient.connect(mongourl, function(err, db) {
-				//if (err) throw err;
-				doMatch.getClosenessAllUser(req.user, function(err, result){
-						if (err){ 
-							res.render('matches', err);
-						}else{
-							res.render('matches',{r:result});
-						};
-				});
-				//db.close();
-		});
-//});
+		//MongoClient.connect(mongourl, function(err, db){
+			//	if (err) throw err;
+			//	var dbo = db.db(dbname);
+			//	var query = {"name":{$in: doMatch.getClosenessAllUser(req.user)}};
+				
+			//	dbo.collection(collectionName).find(query).toArray(function(err, results){
+			//			if (err) throw err;
+			//			var r;
+			//			res.render("matches",{r:results});
+						
+			//			db.close();
+			//	})
+		//})
+		doMatch.getClosenessAllUser(req.user, function(err, result){
+				if (err) throw err;
+				console.log(result);
+		})
+});
 
 app.get('/auth/facebook/callback', 
   passport.authenticate('facebook', { successRedirect: '/account', failureRedirect: '/' }));
