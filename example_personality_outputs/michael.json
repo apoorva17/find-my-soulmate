@@ -2,7 +2,7 @@
   "_id": "4",
   "name": "michael",
   "gender":"m",
-  "age":"40",
+  "age":40,
   "location":"Singapore",
   "genderpref":"f",
   "profilepic":"https://images.pexels.com/users/avatars/699795/adrian-sanchez-munoz-915.jpeg?w=256&h=256&fit=crop&crop=faces&auto=compress",
