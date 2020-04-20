@@ -2,7 +2,7 @@
   "_id": "6",
   "name": "john",
   "gender":"m",
-  "age":"25",
+  "age":25,
   "location":"Singapore",
   "genderpref":"m",
   "ageprefmin": 20,
