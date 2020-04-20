@@ -76,8 +76,10 @@ module.exports = {
 			var top_candidates = arr.slice(0,3).reduce(function(obj, candidate){
 					obj[candidate.key] = candidate.value;
 					return obj},{})
-			var matches = Object.keys(top_candidates);
-			console.log(matches);
+			var matches = JSON.stringify(Object.keys(top_candidates));
+			var matches = matches.replace(/['"\[\]]/gi,"");
+			console.log("your best matches:",matches);
+			var matches = matches.split(",");
 			return matches;
 		}
 		
@@ -111,7 +113,6 @@ module.exports = {
 		})
 		.then(closeness => {
 			var x = getTop(closeness);
-			console.log("closeness" + x);
 			return x;
 		})
 		.catch(err => {
@@ -120,4 +121,3 @@ module.exports = {
 
 	}
 }
-
