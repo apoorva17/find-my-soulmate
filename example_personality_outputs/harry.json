@@ -2,7 +2,7 @@
   "_id": "2",
   "name": "harry",
   "gender":"m",
-  "age":"25",
+  "age":25,
   "location":"Singapore",
   "profilepic":"https://images.pexels.com/users/avatars/782530/andy-kuzma-207.jpeg?w=256&h=256&fit=crop&crop=faces&auto=compress",
   "genderpref":"mf",
