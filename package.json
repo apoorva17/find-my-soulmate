@@ -2,6 +2,11 @@
   "name": "find-my-soulmate",
   "version": "0.0.1",
   "description": "A personality-driven matchmaking service",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "cfenv": "1.0.x",
@@ -14,6 +19,26 @@
     "mongodb": "^3.5.4",
     "mysql": "^2.18.1",
     "passport": "0.2.1",
-    "passport-facebook": "latest"
+    "passport-facebook": "latest",
+    "axios": "^0.19.2",
+    "core-js": "^2.6.5",
+    "vue": "^2.6.10",
+    "vue-cool-select": "^3.5.2",
+    "vue-router": "^3.0.3",
+    "vuex": "^3.0.1",
+    "express-vue": "^5.15.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "node-sass": "^4.13.1",
+    "@vue/cli-plugin-babel": "^3.2.0",
+    "@vue/cli-plugin-eslint": "^3.2.0",
+    "@vue/cli-service": "^3.2.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "sass-loader": "^8.0.0",
+    "vue-template-compiler": "^2.6.10"
   }
 }

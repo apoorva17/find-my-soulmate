@@ -55,13 +55,70 @@ module.exports = {
 	rawdata = fs.readFileSync('example_personality_outputs/tom.json');
 	data = JSON.parse(rawdata);
 	insert(data)
-
-
+	
 	rawdata = fs.readFileSync('example_personality_outputs/susan.json');
 	data = JSON.parse(rawdata);
 	insert(data)
 
-	 console.log ("done!!")
+	rawdata = fs.readFileSync('example_personality_outputs/abigail.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/william.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/ella.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/emily.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/stella.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	// no 13
+	rawdata = fs.readFileSync('example_personality_outputs/olivia.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	// no 14
+	rawdata = fs.readFileSync('example_personality_outputs/nora.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/chloe.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/lily.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/noah.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/henry.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/daniel.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/james.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	rawdata = fs.readFileSync('example_personality_outputs/alexander.json');
+	data = JSON.parse(rawdata);
+	insert(data)
+
+	console.log ("done!!")
 
   }
 };

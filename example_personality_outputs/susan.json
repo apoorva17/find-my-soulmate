@@ -1,6 +1,8 @@
 {
+  "_id": "23",
+  "name": "susan",
   "gender":"f",
-  "age":"24",
+  "age":24,
   "location":"Singapore",
   "genderpref":"m",
   "ageprefmin": 20,

@@ -2,7 +2,7 @@
   "_id": "3",
   "name": "jane",
   "gender":"f",
-  "age":"37",
+  "age":37,
   "location":"Singapore",
   "genderpref":"m",
   "profilepic": "https://images.pexels.com/users/avatars/27692/miriam-espacio-968.jpeg?w=256&h=256&fit=crop&crop=faces&auto=compress",
