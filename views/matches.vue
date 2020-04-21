@@ -23,7 +23,7 @@
         <div class="match-title">Your matches today</div>
         <div class="match-time">Expire on {{date}}</div>
         <div class="match-result">
-          <div class="match-item" v-for="(item, index) in r" :key="index" v-if="r.length > 0">
+          <div class="match-item" v-for="(item, index) in r" :key="index">
             <img class="avatar" :src="item.profilepic" alt />
             <div class="name">{{item.name}}</div>
             <!-- mock match score-->
@@ -119,6 +119,7 @@ export default {
 .main {
   flex: 1;
   overflow: auto;
+  height: 100%;
 }
 .personal-info {
   display: flex;
@@ -190,8 +191,8 @@ export default {
         padding-right: 0;
       }
       .avatar {
-        width: 80%;
-        height: auto;
+        width: 300px;
+        height: 320px;
         background-color: #f5f5f5;
         background-repeat: no-repeat;
         background-size: cover;

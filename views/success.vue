@@ -64,7 +64,7 @@
              onchange="document.getElementById('ageprefmax').min=this.value;">
             <span class="to"> to </span>
             <input type="number" min="document.getElementById('ageprefmin').value" max="100" 
-             value="18"
+             value="35"
              class="age-select" name="ageprefmax" id="ageprefmax">
           </div>
           <div class="form-control describe">
