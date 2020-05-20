@@ -5,6 +5,11 @@ Find My Soulmate! is a matchmaking service which identifies the user’s match b
 
 The application is hosted on AWS and uses IBM's Personality Insights Services to determine the user's personality.
 
+GUI of Homepage:
 ![Homepage](/images/homepage.png)
+
+GUI of Profile Page:
 ![Profile](/images/post_login.png)
+
+GUI of Matches Page:
 ![Matches](/images/matches.png)
